@@ -41,11 +41,6 @@ if __name__ == "__main__":
     #with open(config["file_results"]) as file:
     #    results = simplejson.load(file)
 
-    #/autograder/results/results_.json
-    #shutil.copy()
-
-    # extract_imports("CompletedDeque.java")
-
     with open("/autograder/results/results_.json") as file:
         results = json.load(file)
 
@@ -59,7 +54,7 @@ if __name__ == "__main__":
         results["tests"].append(z)
 
         with open("/autograder/results/results.json", 'w') as outfile:
-            simplejson.dump(results, outfile)
+            json.dump(results, outfile)
 
 
     print(validate_packages(config["package_whitelist"]))
