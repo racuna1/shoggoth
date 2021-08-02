@@ -3,11 +3,8 @@
 __author__ = "Ruben Acuna"
 
 import os
-import shutil
-
 import javalang
 import json
-#import simplejson
 
 
 def extract_imports(filename):
@@ -18,43 +15,46 @@ def extract_imports(filename):
         return packages
 
 
-def validate_packages(whitelist):
+def find_disallowed_packages(filepaths, whitelist):
     packages = set()
 
     # find all packages in use
-    for filename in config["files_required"] + config["files_optional"]:
+    for filename in filepaths:
         # print(filename)
         if os.path.isfile(filename):
             packages.update(extract_imports(filename))
 
-    for package in packages:
-        if package[0] not in whitelist or package[1]:
-            return False
+    disallowed = [p for p in packages if p[0] not in whitelist or p[1]]
 
-    return True
+    return disallowed
 
 
 if __name__ == "__main__":
     with open("config.json") as file:
         config = json.load(file)
 
-    #with open(config["file_results"]) as file:
-    #    results = simplejson.load(file)
-
     with open("/autograder/results/results_.json") as file:
         results = json.load(file)
 
-        z = {'name': 'INJECTED',
-         'number': '1.1',
-         'score': 1.0,
-         'max_score': 1.0,
-         'visibility': 'visible',
-         'output': ''}
+        # check for disallowed packages and zero scores if any are found.
+        filepaths = [config["project_location"] + f for f in config["files_required"] + config["files_optional"]]
+        disallowed_packages = find_disallowed_packages(filepaths, config["package_whitelist"])
+        if disallowed_packages:
 
-        results["tests"].append(z)
+            disallowed_packages_insert = {'name': 'Disallowed packages used.',
+                                          'number': '0',
+                                          'score': 0.0,
+                                          'max_score': 0.0,
+                                          'visibility': 'visible',
+                                          'output': str(disallowed_packages)}
 
-        with open("/autograder/results/results.json", 'w') as outfile:
+            for test in results["tests"]:
+                test["score"] = 0.0
+
+            results["tests"].append(disallowed_packages_insert)
+
+        with open(config["filepath_results"], 'w') as outfile:
             json.dump(results, outfile)
 
 
-    print(validate_packages(config["package_whitelist"]))
+

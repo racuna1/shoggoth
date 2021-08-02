@@ -1,5 +1,6 @@
 {
-    "file_results":"results.json",
+    "filepath_results":"/autograder/results/results.json",
+    "project_location": "/autograder/source/src/main/java/edu/ser222/m01_03/",
     "files_required":[
         "CompletedDeque.java"
     ],
