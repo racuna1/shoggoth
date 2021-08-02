@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+#RA: add manually installed version of maven to path
+export PATH="/autograder/apache-maven-3.8.1/bin:$PATH"
+
+cd /autograder/source
+
+# stuff
+FILE=/autograder/submission/CompletedDeque.java
+
+if [ -f "$FILE" ]; then
+    cp $FILE /autograder/source/src/main/java/edu/ser222/m01_03/
+    echo "autograder: $FILE exists."
+
+    mvn -q compile
+
+    if [ "$?" -ne 0 ] ; then
+        cp /autograder/source/result_buildfail.json /autograder/results/results.json
+    else
+        mvn -q exec:java > /autograder/results/results_.json
+
+        python3 main.py
+    fi
+else 
+    echo "autograder: $FILE does not exist."
+    cp /autograder/source/result_missing.json /autograder/results/results.json
+fi

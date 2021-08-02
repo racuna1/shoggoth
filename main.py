@@ -35,6 +35,15 @@ if __name__ == "__main__":
     with open("config.json") as file:
         config = simplejson.load(file)
 
+    with open(config["file_results"]) as file:
+        results = simplejson.load(file)
+
+    z = {'name': 'INJECTED',
+     'number': '1.1',
+     'score': 1.0,
+     'max_score': 1.0,
+     'visibility': 'visible',
+     'output': ''}
     extract_imports("CompletedDeque.java")
 
     print(validate_packages(config["package_whitelist"]))
