@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
-
+"""Shoggoth - Tools for Java Autograding"""
 __author__ = "Ruben Acuna"
 
 import os
+import shutil
+
 import javalang
 import json
 
@@ -33,7 +35,22 @@ if __name__ == "__main__":
     with open("config.json") as file:
         config = json.load(file)
 
-    os.system("mvn -q exec:java > /autograder/results/results_.json")
+    FILE = config["submission_location"] + config["files_required"][0] #HACK
+    print(FILE)
+    if not os.path.isfile(FILE):
+        print("shoggoth: {} does not exist.".format(FILE))
+        shutil.copy("/autograder/source/result_missing.json", config["filepath_results"])
+        exit()
+
+    print("shoggoth: {} exists.".format(FILE))
+    shutil.copy(FILE, config["project_location"])
+
+    ret = os.system("mvn -q compile")
+    if ret:
+        shutil.copy("/autograder/source/result_buildfail.json", config["filepath_results"])
+        exit()
+    else:
+        os.system("mvn -q exec:java > /autograder/results/results_.json")
 
     with open("/autograder/results/results_.json") as file:
         results = json.load(file)
