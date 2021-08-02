@@ -33,6 +33,8 @@ if __name__ == "__main__":
     with open("config.json") as file:
         config = json.load(file)
 
+    os.system("mvn -q exec:java > /autograder/results/results_.json")
+
     with open("/autograder/results/results_.json") as file:
         results = json.load(file)
 
@@ -46,15 +48,13 @@ if __name__ == "__main__":
                                           'score': 0.0,
                                           'max_score': 0.0,
                                           'visibility': 'visible',
-                                          'output': str(disallowed_packages)}
+                                          'output': str([p[0] for p in disallowed_packages])}
 
             for test in results["tests"]:
                 test["score"] = 0.0
+                test["output"] = ""
 
             results["tests"].append(disallowed_packages_insert)
 
         with open(config["filepath_results"], 'w') as outfile:
             json.dump(results, outfile)
-
-
-
