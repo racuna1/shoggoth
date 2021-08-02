@@ -6,7 +6,8 @@ import os
 import shutil
 
 import javalang
-import simplejson
+import json
+#import simplejson
 
 
 def extract_imports(filename):
@@ -35,7 +36,7 @@ def validate_packages(whitelist):
 
 if __name__ == "__main__":
     with open("config.json") as file:
-        config = simplejson.load(file)
+        config = json.load(file)
 
     #with open(config["file_results"]) as file:
     #    results = simplejson.load(file)
@@ -46,7 +47,7 @@ if __name__ == "__main__":
     # extract_imports("CompletedDeque.java")
 
     with open("/autograder/results/results_.json") as file:
-        results = simplejson.load(file)
+        results = json.load(file)
 
         z = {'name': 'INJECTED',
          'number': '1.1',
