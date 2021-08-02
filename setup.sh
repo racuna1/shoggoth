@@ -17,4 +17,4 @@ export PATH="/autograder/apache-maven-3.8.1/bin:$PATH"
 mvn install:install-file -Dfile=lib/jh61b-1.0.jar
 
 # install packages for shoggoth
-pip install -r requirements.txt
+pip3 install -r requirements.txt
