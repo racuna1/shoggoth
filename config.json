@@ -1,0 +1,11 @@
+{
+    "files_required":[
+        "CompletedDeque.java"
+    ],
+    "files_optional":[
+        "DoubleLinearNode"
+    ],
+    "package_whitelist":[
+        "java.util.NoSuchElementException"
+    ]
+}
