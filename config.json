@@ -6,7 +6,7 @@
         "CompletedDeque.java"
     ],
     "files_optional":[
-        "DoubleLinearNode"
+        "DoubleLinearNode.java"
     ],
     "package_whitelist":[
         "java.util.NoSuchElementException"

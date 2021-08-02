@@ -22,7 +22,6 @@ def find_disallowed_packages(filepaths, whitelist):
 
     # find all packages in use
     for filename in filepaths:
-        # print(filename)
         if os.path.isfile(filename):
             packages.update(extract_imports(filename))
 
@@ -35,27 +34,39 @@ if __name__ == "__main__":
     with open("config.json") as file:
         config = json.load(file)
 
-    FILE = config["submission_location"] + config["files_required"][0] #HACK
-    print(FILE)
-    if not os.path.isfile(FILE):
-        print("shoggoth: {} does not exist.".format(FILE))
-        shutil.copy("/autograder/source/result_missing.json", config["filepath_results"])
-        exit()
+    # verify and copy required files.
+    for required in config["files_required"]:
+        filepath_required = config["submission_location"] + required
+        if not os.path.isfile(filepath_required):
+            print("shoggoth: {} does not exist.".format(filepath_required))
+            shutil.copy("/autograder/source/result_missing.json", config["filepath_results"])
+            exit()
+        else:
+            shutil.copy(filepath_required, config["project_location"])
 
-    print("shoggoth: {} exists.".format(FILE))
-    shutil.copy(FILE, config["project_location"])
+    print("shoggoth: all required files exist.")
+
+    # copy any optional files
+    for optional in config["files_optional"]:
+        filepath_optional = config["submission_location"] + optional
+        if os.path.isfile(filepath_required):
+            shutil.copy(filepath_required, config["project_location"])
 
     ret = os.system("mvn -q compile")
+
+    # check if compilation failed
     if ret:
         shutil.copy("/autograder/source/result_buildfail.json", config["filepath_results"])
         exit()
     else:
-        os.system("mvn -q exec:java > /autograder/results/results_.json")
+        filepath_initial_results = "/autograder/results/results_wip.json"
+        os.system("mvn -q exec:java > " + filepath_initial_results)
 
-    with open("/autograder/results/results_.json") as file:
+    # compilation succeeded, apply grading rules.
+    with open(filepath_initial_results) as file:
         results = json.load(file)
 
-        # check for disallowed packages and zero scores if any are found.
+        # 1) check for disallowed packages and zero scores if any are found.
         filepaths = [config["project_location"] + f for f in config["files_required"] + config["files_optional"]]
         disallowed_packages = find_disallowed_packages(filepaths, config["package_whitelist"])
         if disallowed_packages:
