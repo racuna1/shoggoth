@@ -10,5 +10,8 @@
     ],
     "package_whitelist":[
         "java.util.NoSuchElementException"
+    ],
+    "assert_perf_constant":[
+        "toString"
     ]
 }
