@@ -9,6 +9,32 @@ import javalang
 import json
 
 
+class GradescopeResult:
+
+    def __init__(self, filepath):
+        with open(filepath_initial_results) as infile:
+            self.results = json.load(infile)
+
+    def zero_all(self):
+        for test in self.results["tests"]:
+            test["score"] = 0.0
+            test["output"] = ""
+
+    def add_note(self, name,  output):
+        new_entry = {'name': name,
+                     'number': '0',
+                     'score': 0.0,
+                     'max_score': 0.0,
+                     'visibility': 'visible',
+                     'output': output}
+
+        self.results["tests"].append(new_entry)
+
+    def save(self, filepath):
+        with open(config["filepath_results"], 'w') as outfile:
+            json.dump(self.results, outfile)
+
+
 def extract_imports(filename):
     with open(filename, "r") as file:
         data = file.read()
@@ -66,9 +92,8 @@ def statement_has_repetition(method_name, statement):
     return False
 
 
-def assert_perf_constant_file(filename, methods):
+def follows_constant_rule(filename, method):
 
-    r = []
     with open(filename, "r") as file:
         data = file.read()
         cu = javalang.parse.parse(data)
@@ -77,26 +102,27 @@ def assert_perf_constant_file(filename, methods):
         for path, node_class in cu.filter(javalang.tree.ClassDeclaration):
             for node_method in node_class.methods:
                 name = node_method.name
-                if body_has_repetition(name, node_method.body) and name in methods:
-                    r += [name]
+                if body_has_repetition(name, node_method.body) and name == method:
+                    return True
 
-    return r
+    return False
 
 
-def assert_perf_constant(filepaths, methods):
+def assert_perf_constant_rules(filepaths, methods):
     violations = []
     for filename in filepaths:
         if os.path.isfile(filename):
-            violations += assert_perf_constant_file(filename, methods)
+            for method in methods:
+                violations += follows_constant_rule(filename, method)
     return violations
 
 
 if __name__ == "__main__":
-    #filepaths = ["CompletedDeque.java"]
-    #config = {}; config["assert_perf_constant"] = ["toString"] #["enqueueFront"]
-    #violations = assert_perf_constant(filepaths, config["assert_perf_constant"])
-    #print(violations)
-    #exit()
+    filepaths = ["CompletedDeque.java"]
+    config = {}; config["assert_perf_constant"] = ["toString"] #["enqueueFront"]
+    violations = assert_perf_constant_rules(filepaths, config["assert_perf_constant"])
+    print(violations)
+    exit()
 
     with open("config.json") as file:
         config = json.load(file)
@@ -130,30 +156,22 @@ if __name__ == "__main__":
         os.system("mvn -q exec:java > " + filepath_initial_results)
 
     # compilation succeeded, apply grading rules.
-    with open(filepath_initial_results) as file:
-        results = json.load(file)
-        filepaths = [config["project_location"] + f for f in config["files_required"] + config["files_optional"]]
+    gsr = GradescopeResult(filepath_initial_results)
+    #with open(filepath_initial_results) as file:
+    #    results = json.load(file)
+    filepaths = [config["project_location"] + f for f in config["files_required"] + config["files_optional"]]
 
-        # 1) check for disallowed packages and zero scores if any are found.
-        disallowed_packages = find_disallowed_packages(filepaths, config["package_whitelist"])
-        if disallowed_packages:
+    # 1) check for disallowed packages and zero scores if any are found.
+    disallowed_packages = find_disallowed_packages(filepaths, config["package_whitelist"])
+    if disallowed_packages:
+        gsr.zero_all()
+        gsr.add_note("Disallowed packages used.", str([p[0] for p in disallowed_packages]))
 
-            disallowed_packages_insert = {'name': 'Disallowed packages used.',
-                                          'number': '0',
-                                          'score': 0.0,
-                                          'max_score': 0.0,
-                                          'visibility': 'visible',
-                                          'output': str([p[0] for p in disallowed_packages])}
+    # 2) assert O(1) requirement
+    violations = assert_perf_constant_rules(filepaths, config["assert_perf_constant"])
+    print(violations)
 
-            for test in results["tests"]:
-                test["score"] = 0.0
-                test["output"] = ""
-
-            results["tests"].append(disallowed_packages_insert)
-
-        # 2) assert O(1) requirement
-        violations = assert_perf_constant(filepaths, config["assert_perf_constant"])
-        print(violations)
-
-        with open(config["filepath_results"], 'w') as outfile:
-            json.dump(results, outfile)
+    #with open(config["filepath_results"], 'w') as outfile:
+    #    json.dump(results, outfile)
+    gsr.save(config["filepath_results"])
+0
