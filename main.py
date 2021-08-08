@@ -136,7 +136,6 @@ if __name__ == "__main__":
 
     # check if compilation failed
     if ret:
-        shutil.copy("/autograder/source/result_buildfail.json", config["filepath_results"])
         gsr.set_result_buildfail()
     else:
         filepath_initial_results = "/autograder/results/results_wip.json"
@@ -156,4 +155,3 @@ if __name__ == "__main__":
         assert_perf_constant_rules(gsr, filepaths, config["assert_perf_constant"])
 
     gsr.save(config["filepath_results"])
-    
