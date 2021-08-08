@@ -33,31 +33,40 @@ def find_disallowed_packages(filepaths, whitelist):
     return disallowed
 
 
-def body_has_repetition(method_name, body):
+def body_has_repetition(class_name, method_name, body):
     if not body:
         return False
     elif type(body) is list:
         for statement in body:
-            if statement_has_repetition(method_name, statement):
+            if statement_has_repetition(class_name, method_name, statement):
                 return True
         return False
     else:
-        return statement_has_repetition(method_name, body)
+        return statement_has_repetition(class_name, method_name, body)
 
 
-def statement_has_repetition(method_name, statement):
+def statement_has_repetition(class_name, method_name, statement):
     # see https://github.com/c2nes/javalang/blob/master/javalang/tree.py
 
     if type(statement) in [javalang.tree.IfStatement]:
-        return body_has_repetition(method_name, statement.then_statement) or \
-               body_has_repetition(method_name, statement.else_statement)
+        return body_has_repetition(class_name, method_name, statement.then_statement) or \
+               body_has_repetition(class_name, method_name, statement.else_statement)
     elif type(statement) is javalang.tree.BlockStatement:
-        return body_has_repetition(method_name, statement.statements)
+        return body_has_repetition(class_name, method_name, statement.statements)
     elif type(statement) in [javalang.tree.WhileStatement, javalang.tree.ForStatement, javalang.tree.DoStatement]:
         return True
     elif type(statement) is javalang.tree.StatementExpression:  # recursion
-        if statement.expression.member == method_name:
-            return True
+
+        if type(statement.expression) is javalang.tree.MethodInvocation:
+            if statement.expression.member == method_name:
+                return True
+        elif type(statement.expression) is javalang.tree.Assignment:
+            if type(statement.expression.children[1]) is javalang.tree.MemberReference:
+                pass
+            else:
+                print("DEBUG: unknown rexp encountered in statement_has_iteration: " + str(type(statement)))
+        else:
+            print("DEBUG: unknown expression encountered in statement_has_iteration: " + str(type(statement)))
     elif type(statement) in [javalang.tree.LocalVariableDeclaration, javalang.tree.ReturnStatement,
                              javalang.tree.AssertStatement, javalang.tree.BreakStatement, javalang.tree.ContinueStatement,
                              javalang.tree.ReturnStatement, javalang.tree.ThrowStatement, javalang.tree.SynchronizedStatement,
@@ -70,7 +79,6 @@ def statement_has_repetition(method_name, statement):
 
 
 def follows_constant_rule(filename, method):
-
     with open(filename, "r") as file:
         data = file.read()
         cu = javalang.parse.parse(data)
@@ -78,31 +86,28 @@ def follows_constant_rule(filename, method):
         # can probably can do this on MethodDeclaration but this way prepares us for checking per class.
         for path, node_class in cu.filter(javalang.tree.ClassDeclaration):
             for node_method in node_class.methods:
-                name = node_method.name
-                if body_has_repetition(name, node_method.body) and name == method:
-                    return True
+                method_name = node_method.name
+                if body_has_repetition(node_class.name, method_name, node_method.body) and method_name == method:
+                    return False
 
-    return False
+    return True
+
 
 def assert_perf_constant_rules(gsr, filepaths, methods):
     for filename in filepaths:
         if os.path.isfile(filename):
             for method in methods:
                 if not follows_constant_rule(filename, method):
-                    note = "{}: Did not meet O(1) performance requirement.".format(os.path.basename(filename))
-                    gsr.zero_by_keyword(gsr, method, note)
+                    note = "{}::{} Did not meet O(1) performance requirement.".format(os.path.basename(filename), method)
+                    gsr.zero_by_keyword(method, note)
 
 
 if __name__ == "__main__":
-    filepaths = ["CompletedDeque.java"]
-    config = {}; config["assert_perf_constant"] = ["toString"] #["enqueueFront"]
-    violations = assert_perf_constant_rules(filepaths, config["assert_perf_constant"])
-    print(violations)
-    exit()
+    # add manually installed version of maven to path
+    os.environ["PATH"] += os.pathsep + "/autograder/apache-maven-3.8.1/bin"
 
     with open("config.json") as file:
         config = json.load(file)
-
     # verify and copy required files.
     for required in config["files_required"]:
         filepath_required = config["submission_location"] + required
@@ -133,8 +138,6 @@ if __name__ == "__main__":
 
     # compilation succeeded, apply grading rules.
     gsr = gradescope_result.GradescopeResult(filepath_initial_results, config["filepath_results"])
-    #with open(filepath_initial_results) as file:
-    #    results = json.load(file)
     filepaths = [config["project_location"] + f for f in config["files_required"] + config["files_optional"]]
 
     # 1) check for disallowed packages and zero scores if any are found.
@@ -145,7 +148,6 @@ if __name__ == "__main__":
 
     # 2) assert O(1) requirement
     assert_perf_constant_rules(gsr, filepaths, config["assert_perf_constant"])
-
 
     #with open(config["filepath_results"], 'w') as outfile:
     #    json.dump(results, outfile)

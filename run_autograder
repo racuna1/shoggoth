@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-#add manually installed version of maven to path
-export PATH="/autograder/apache-maven-3.8.1/bin:$PATH"
-
 cd /autograder/source
 
 #start shoggoth
