@@ -1,3 +1,5 @@
+__author__ = "Ruben Acuna"
+
 import json
 
 
@@ -6,11 +8,20 @@ class GradescopeResult:
     A wrapper for a Gradescope result file that provides common operations.
     """
 
-    def __init__(self, infilepath, outfilepath):
-        with open(infilepath) as infile:
+    def __init__(self):
+        self.results = {"execution_time": 1, "stdout_visibility": "visible", "tests": []}
+        self.add_note("Shoggoth Internal", "ERROR: used uninitialized results file.")
+
+    def __init__(self, filepath):
+        self.load(filepath)
+
+    def load(self, filepath):
+        with open(filepath) as infile:
             self.results = json.load(infile)
 
-        self.outfilepath = outfilepath
+    def save(self, filepath):
+        with open(filepath, 'w') as outfile:
+            json.dump(self.results, outfile)
 
     def add_note(self, name,  output):
         new_entry = {'name': name,
@@ -36,6 +47,24 @@ class GradescopeResult:
                 else:
                     test["output"] = output
 
-    def save(self, filepath):
-        with open(self.outfilepath, 'w') as outfile:
-            json.dump(self.results, outfile)
+
+
+    def set_result_buildfail(self):
+        self.results = {"execution_time": 1,
+                   "stdout_visibility": "visible",
+                   "tests": [{"name": "Compilation",
+                              "number": "",
+                              "score": 0.0,
+                              "max_score": 0.0,
+                              "visibility": "visible",
+                              "output": "Could not compile file.\n"}]}
+
+    def set_result_filemissing(self):
+        self.results = {"execution_time": 1,
+                   "stdout_visibility": "visible",
+                   "tests": [{"name": "Upload File",
+                              "number": "",
+                              "score": 0.0,
+                              "max_score": 0.0,
+                              "visibility": "visible",
+                              "output": "Could not find expected file(s).\n"}]}

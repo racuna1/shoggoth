@@ -110,12 +110,16 @@ if __name__ == "__main__":
 
     with open("config.json") as file:
         config = json.load(file)
+
+    gsr = gradescope_result.GradescopeResult()
+
     # verify and copy required files.
     for required in config["files_required"]:
         filepath_required = config["submission_location"] + required
         if not os.path.isfile(filepath_required):
             print("shoggoth: {} does not exist.".format(filepath_required))
-            shutil.copy("/autograder/source/result_missing.json", config["filepath_results"])
+            gsr.set_result_filemissing()
+            gsr.save(config["filepath_results"])
             exit()
         else:
             shutil.copy(filepath_required, config["project_location"])
@@ -133,25 +137,23 @@ if __name__ == "__main__":
     # check if compilation failed
     if ret:
         shutil.copy("/autograder/source/result_buildfail.json", config["filepath_results"])
-        exit()
+        gsr.set_result_buildfail()
     else:
         filepath_initial_results = "/autograder/results/results_wip.json"
         os.system("mvn -q exec:java > " + filepath_initial_results)
 
-    # compilation succeeded, apply grading rules.
-    gsr = gradescope_result.GradescopeResult(filepath_initial_results, config["filepath_results"])
-    filepaths = [config["project_location"] + f for f in config["files_required"] + config["files_optional"]]
+        # compilation succeeded, apply grading rules.
+        gsr.load(filepath_initial_results)
+        filepaths = [config["project_location"] + f for f in config["files_required"] + config["files_optional"]]
 
-    # 1) check for disallowed packages and zero scores if any are found.
-    disallowed_packages = find_disallowed_packages(filepaths, config["package_whitelist"])
-    if disallowed_packages:
-        gsr.zero_all()
-        gsr.add_note("Disallowed packages used.", str([p[0] for p in disallowed_packages]))
+        # 1) check for disallowed packages and zero scores if any are found.
+        disallowed_packages = find_disallowed_packages(filepaths, config["package_whitelist"])
+        if disallowed_packages:
+            gsr.zero_all()
+            gsr.add_note("Disallowed packages used.", str([p[0] for p in disallowed_packages]))
 
-    # 2) assert O(1) requirement
-    assert_perf_constant_rules(gsr, filepaths, config["assert_perf_constant"])
+        # 2) assert O(1) requirement
+        assert_perf_constant_rules(gsr, filepaths, config["assert_perf_constant"])
 
-    #with open(config["filepath_results"], 'w') as outfile:
-    #    json.dump(results, outfile)
     gsr.save(config["filepath_results"])
-0
+    
