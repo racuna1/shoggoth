@@ -56,15 +56,17 @@ def statement_has_repetition(class_name, method_name, statement):
     elif type(statement) in [javalang.tree.WhileStatement, javalang.tree.ForStatement, javalang.tree.DoStatement]:
         return True
     elif type(statement) is javalang.tree.StatementExpression:  # recursion
-
         if type(statement.expression) is javalang.tree.MethodInvocation:
             if statement.expression.member == method_name:
                 return True
         elif type(statement.expression) is javalang.tree.Assignment:
-            if type(statement.expression.children[1]) is javalang.tree.MemberReference:
+            if type(statement.expression.children[1]) in [javalang.tree.MemberReference, javalang.tree.ClassCreator,
+                                                          javalang.tree.Literal]:
                 pass
             else:
                 print("DEBUG: unknown rexp encountered in statement_has_iteration: " + str(type(statement)))
+        elif type(statement.expression) is javalang.tree.MemberReference:
+            pass
         else:
             print("DEBUG: unknown expression encountered in statement_has_iteration: " + str(type(statement)))
     elif type(statement) in [javalang.tree.LocalVariableDeclaration, javalang.tree.ReturnStatement,
