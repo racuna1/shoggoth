@@ -12,6 +12,13 @@
         "java.util.NoSuchElementException"
     ],
     "assert_perf_constant":[
-        "toString"
+        "enqueueFront",
+        "enqueueBack",
+        "dequeueFront",
+        "dequeueBack",
+        "first",
+        "last",
+        "isEmpty",
+        "size"
     ]
 }
