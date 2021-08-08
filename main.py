@@ -10,15 +10,13 @@ import json
 
 
 class GradescopeResult:
+    """
+    A wrapper for a Gradescope result file that provides common operations.
+    """
 
     def __init__(self, filepath):
         with open(filepath_initial_results) as infile:
             self.results = json.load(infile)
-
-    def zero_all(self):
-        for test in self.results["tests"]:
-            test["score"] = 0.0
-            test["output"] = ""
 
     def add_note(self, name,  output):
         new_entry = {'name': name,
@@ -29,6 +27,17 @@ class GradescopeResult:
                      'output': output}
 
         self.results["tests"].append(new_entry)
+
+    def zero_all(self):
+        for test in self.results["tests"]:
+            test["score"] = 0.0
+            test["output"] = ""
+
+    def zero_by_keyword(self, keyword, output):
+        for test in self.results["tests"]:
+            if keyword in test["name"]:
+                test["score"] = 0.0
+                test["output"] = output
 
     def save(self, filepath):
         with open(config["filepath_results"], 'w') as outfile:
@@ -107,14 +116,13 @@ def follows_constant_rule(filename, method):
 
     return False
 
-
-def assert_perf_constant_rules(filepaths, methods):
-    violations = []
+def assert_perf_constant_rules(gsr, filepaths, methods):
     for filename in filepaths:
         if os.path.isfile(filename):
             for method in methods:
-                violations += follows_constant_rule(filename, method)
-    return violations
+                if not follows_constant_rule(filename, method):
+                    note = "{}: Did not meet O(1) performance requirement.".format(os.path.basename(filename))
+                    gsr.zero_by_keyword(gsr, method, note)
 
 
 if __name__ == "__main__":
@@ -168,8 +176,8 @@ if __name__ == "__main__":
         gsr.add_note("Disallowed packages used.", str([p[0] for p in disallowed_packages]))
 
     # 2) assert O(1) requirement
-    violations = assert_perf_constant_rules(filepaths, config["assert_perf_constant"])
-    print(violations)
+    assert_perf_constant_rules(gsr, filepaths, config["assert_perf_constant"])
+
 
     #with open(config["filepath_results"], 'w') as outfile:
     #    json.dump(results, outfile)
