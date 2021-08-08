@@ -8,12 +8,12 @@ class GradescopeResult:
     A wrapper for a Gradescope result file that provides common operations.
     """
 
-    def __init__(self):
-        self.results = {"execution_time": 1, "stdout_visibility": "visible", "tests": []}
-        self.add_note("Shoggoth Internal", "ERROR: used uninitialized results file.")
-
-    def __init__(self, filepath):
-        self.load(filepath)
+    def __init__(self, filepath=None):
+        if filepath is None:
+            self.results = {"execution_time": 1, "stdout_visibility": "visible", "tests": []}
+            self.add_note("Shoggoth Internal", "ERROR: used uninitialized results file.")
+        else:
+            self.load(filepath)
 
     def load(self, filepath):
         with open(filepath) as infile:
@@ -57,7 +57,7 @@ class GradescopeResult:
                               "score": 0.0,
                               "max_score": 0.0,
                               "visibility": "visible",
-                              "output": "Could not compile file.\n"}]}
+                              "output": "Could not compile submission.\n"}]}
 
     def set_result_filemissing(self):
         self.results = {"execution_time": 1,
