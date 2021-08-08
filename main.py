@@ -1,47 +1,15 @@
 #!/usr/bin/env python3
-"""Shoggoth - Tools for Java Autograding"""
+"""
+Shoggoth - A Gradescope compatible tool for performing automatic assessment of Java homework, using static and
+dynamic analysis.
+"""
 __author__ = "Ruben Acuna"
 
 import os
 import shutil
-
 import javalang
 import json
-
-
-class GradescopeResult:
-    """
-    A wrapper for a Gradescope result file that provides common operations.
-    """
-
-    def __init__(self, filepath):
-        with open(filepath_initial_results) as infile:
-            self.results = json.load(infile)
-
-    def add_note(self, name,  output):
-        new_entry = {'name': name,
-                     'number': '0',
-                     'score': 0.0,
-                     'max_score': 0.0,
-                     'visibility': 'visible',
-                     'output': output}
-
-        self.results["tests"].append(new_entry)
-
-    def zero_all(self):
-        for test in self.results["tests"]:
-            test["score"] = 0.0
-            test["output"] = ""
-
-    def zero_by_keyword(self, keyword, output):
-        for test in self.results["tests"]:
-            if keyword in test["name"]:
-                test["score"] = 0.0
-                test["output"] = output
-
-    def save(self, filepath):
-        with open(config["filepath_results"], 'w') as outfile:
-            json.dump(self.results, outfile)
+import gradescope_result
 
 
 def extract_imports(filename):
@@ -164,7 +132,7 @@ if __name__ == "__main__":
         os.system("mvn -q exec:java > " + filepath_initial_results)
 
     # compilation succeeded, apply grading rules.
-    gsr = GradescopeResult(filepath_initial_results)
+    gsr = gradescope_result.GradescopeResult(filepath_initial_results, config["filepath_results"])
     #with open(filepath_initial_results) as file:
     #    results = json.load(file)
     filepaths = [config["project_location"] + f for f in config["files_required"] + config["files_optional"]]
