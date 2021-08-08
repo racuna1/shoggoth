@@ -47,8 +47,6 @@ class GradescopeResult:
                 else:
                     test["output"] = output
 
-
-
     def set_result_buildfail(self):
         self.results = {"execution_time": 1,
                    "stdout_visibility": "visible",
