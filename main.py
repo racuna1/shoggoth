@@ -109,7 +109,7 @@ def assert_perf_constant_rules(gsr, filepaths, methods):
 
 if __name__ == "__main__":
     # add manually installed version of maven to path
-    os.environ["PATH"] += os.pathsep + "/autograder/apache-maven-3.8.1/bin"
+    os.environ["PATH"] += os.pathsep + "/autograder/apache-maven-3.8.3/bin"
 
     with open("config.json") as file:
         config = json.load(file)
