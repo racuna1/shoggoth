@@ -1,24 +1,19 @@
 {
     "filepath_results": "/autograder/results/results.json",
     "submission_location": "/autograder/submission/",
-    "project_location": "/autograder/source/src/main/java/edu/ser222/m01_03/",
+    "project_location": "/autograder/source/src/main/java/edu/ser222/m02_02/",
     "files_required":[
-        "CompletedDeque.java"
+        "CompletedMerging.java"
     ],
     "files_optional":[
-        "DoubleLinearNode.java"
     ],
     "package_whitelist":[
-        "java.util.NoSuchElementException"
+        "java.util.Arrays",
+        "java.util.Random"
     ],
     "assert_perf_constant":[
-        "enqueueFront",
-        "enqueueBack",
-        "dequeueFront",
-        "dequeueBack",
-        "first",
-        "last",
-        "isEmpty",
-        "size"
+    ]
+    "assert_perf_linear":[
+        "mergeQueues"
     ]
 }
