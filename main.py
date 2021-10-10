@@ -67,18 +67,18 @@ def statement_has_repetition(class_name, method_name, statement):
                 if statement.expression.children[1].member == method_name:
                     return True
             else:
-                print("DEBUG: unknown rexp encountered in statement_has_iteration: " + str(type(statement)))
+                print("DEBUG: unknown rexp encountered in statement_has_repetition: " + str(type(statement)))
         elif type(statement.expression) is javalang.tree.MemberReference:
             pass
         else:
-            print("DEBUG: unknown expression encountered in statement_has_iteration: " + str(type(statement)))
+            print("DEBUG: unknown expression encountered in statement_has_repetition: " + str(type(statement)))
     elif type(statement) in [javalang.tree.LocalVariableDeclaration, javalang.tree.ReturnStatement,
                              javalang.tree.AssertStatement, javalang.tree.BreakStatement, javalang.tree.ContinueStatement,
                              javalang.tree.ReturnStatement, javalang.tree.ThrowStatement, javalang.tree.SynchronizedStatement,
                              javalang.tree.TryStatement, javalang.tree.SwitchStatement]:
         pass
     else:
-        print("DEBUG: unknown statement encountered in statement_has_iteration: " + str(type(statement)))
+        print("DEBUG: unknown statement encountered in statement_has_repetition: " + str(type(statement)))
 
     return False
 
@@ -106,10 +106,90 @@ def assert_perf_constant_rules(gsr, filepaths, methods):
                     note = "{}::{} Did not meet O(1) performance requirement.".format(os.path.basename(filename), method)
                     gsr.zero_by_keyword(method, note)
 
+def statement_estimate_order(class_name, method_name, statement):
+    # see https://github.com/c2nes/javalang/blob/master/javalang/tree.py
+
+    if type(statement) in [javalang.tree.IfStatement]:
+        order = statement_estimate_order(class_name, method_name, statement.then_statement)
+        if statement.else_statement:
+            order_false = statement_estimate_order(class_name, method_name, statement.else_statement)
+            order = max(order, order_false)
+        return order
+    elif type(statement) is javalang.tree.BlockStatement:
+        return body_est_order(class_name, method_name, statement.statements)  #TODO: need to do above as well?
+    elif type(statement) in [javalang.tree.WhileStatement, javalang.tree.ForStatement, javalang.tree.DoStatement]:
+        inner_est = body_est_order(class_name, method_name, statement.body)
+        return 1 + inner_est  # add order of nested loops.
+    elif type(statement) is javalang.tree.StatementExpression:  # recursion
+        if type(statement.expression) is javalang.tree.MethodInvocation:
+            if statement.expression.member == method_name:
+                return 1  # NOTE: this assumes we are making only one call to ourselves
+        elif type(statement.expression) is javalang.tree.Assignment:
+            if type(statement.expression.children[1]) in [javalang.tree.MemberReference, javalang.tree.ClassCreator,
+                                                          javalang.tree.Literal]:
+                pass
+            elif type(statement.expression.children[1]) is javalang.tree.MethodInvocation:
+                if statement.expression.children[1].member == method_name:
+                    return 1  # NOTE: this assumes we are making only one call to ourselves
+            else:
+                print("DEBUG: unknown rexp encountered in statement_estimate_order: " + str(type(statement)))
+        elif type(statement.expression) is javalang.tree.MemberReference:
+            pass
+        else:
+            print("DEBUG: unknown expression encountered in statement_estimate_order: " + str(type(statement)))
+    elif type(statement) in [javalang.tree.LocalVariableDeclaration, javalang.tree.ReturnStatement,
+                             javalang.tree.AssertStatement, javalang.tree.BreakStatement, javalang.tree.ContinueStatement,
+                             javalang.tree.ReturnStatement, javalang.tree.ThrowStatement, javalang.tree.SynchronizedStatement,
+                             javalang.tree.TryStatement, javalang.tree.SwitchStatement]:
+        pass
+    else:
+        print("DEBUG: unknown statement encountered in statement_estimate_order: " + str(type(statement)))
+
+    return 0
+
+
+def body_est_order(class_name, method_name, body):
+    if not body:
+        return 0  # no code is constant time
+    elif type(body) is list:
+        order = 0
+        for statement in body:
+            statement_order = statement_estimate_order(class_name, method_name, statement)
+            order = max(order, statement_order)
+        return order
+    else:
+        return statement_estimate_order(class_name, method_name, body)
+
+
+def follows_linear_rule(filename, method):
+    with open(filename, "r") as file:
+        data = file.read()
+        cu = javalang.parse.parse(data)
+
+        # can probably can do this on MethodDeclaration but this way prepares us for checking per class.
+        for path, node_class in cu.filter(javalang.tree.ClassDeclaration):
+            for node_method in node_class.methods:
+                method_name = node_method.name
+                est = body_est_order(node_class.name, method_name, node_method.body)
+                print("DEBUG:" + str(method_name) + " is O(" + str(est)+")")
+                if est > 1 and method_name == method:
+                    return False
+
+    return True
+
+
+def assert_perf_linear_rules(gsr, filepaths, methods):
+    for filename in filepaths:
+        if os.path.isfile(filename):
+            for method in methods:
+                if not follows_linear_rule(filename, method):
+                    note = "{}::{} Found nested loops. Most likely does not meet O(n) performance requirement.".format(os.path.basename(filename), method)
+                    gsr.zero_by_keyword(method, note)
+
 
 if __name__ == "__main__":
     # add manually installed version of maven to path
-    os.environ["PATH"] += os.pathsep + "/autograder/apache-maven-3.8.3/bin"
+    os.environ["PATH"] += os.pathsep + "/autograder/apache-maven-3.8.1/bin"
 
     with open("config.json") as file:
         config = json.load(file)
@@ -156,5 +236,8 @@ if __name__ == "__main__":
 
         # 2) assert O(1) requirement
         assert_perf_constant_rules(gsr, filepaths, config["assert_perf_constant"])
+
+        # 3) assert O(n) requirement
+        assert_perf_linear_rules(gsr, filepaths, config["assert_perf_linear"])
 
     gsr.save(config["filepath_results"])

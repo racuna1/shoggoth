@@ -12,7 +12,7 @@
         "java.util.Random"
     ],
     "assert_perf_constant":[
-    ]
+    ],
     "assert_perf_linear":[
         "mergeQueues"
     ]
