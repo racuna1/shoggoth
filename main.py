@@ -111,7 +111,7 @@ def follows_linear_rule(cu, method):
         for node_method in node_class.methods:
             method_name = node_method.name
             est = analysis_java_perf.body_est_order(node_class.name, method_name, node_method.body)
-            print("DEBUG:" + str(method_name) + " is O(" + str(est)+")")
+            #print("DEBUG:" + str(method_name) + " is O(" + str(est)+")")
             if est > 1 and method_name == method:
                 return False
 
@@ -125,6 +125,18 @@ def assert_perf_linear_rules(gsr, filepaths, parse_trees, methods):
             if not follows_linear_rule(cu, method):
                 note = "{}::{} Found nested loops. Most likely does not meet O(n) performance requirement.".format(os.path.basename(filename), method)
                 gsr.zero_by_keyword(method, note)
+
+
+def assert_no_class_variables(gsr, filepaths, parse_trees, classes):
+    for filename in filepaths:
+        cu = parse_trees[filename]
+        for path, node_class in cu.filter(javalang.tree.ClassDeclaration):
+
+            if node_class.name in classes and len(node_class.fields) > 0:
+                gsr.zero_all()
+                note = "{}: Found class member variables.".format(node_class.name)
+                gsr.add_note(note, "")
+                #gsr.add_note("Disallowed packages used.", str([p[0] for p in disallowed_packages]))
 
 
 if __name__ == "__main__":
@@ -187,5 +199,8 @@ if __name__ == "__main__":
 
         # 3) assert O(n) requirement
         assert_perf_linear_rules(gsr, filepaths, parse_trees, config["assert_perf_linear"])
+
+        # 4) assert no class variables
+        assert_no_class_variables(gsr, filepaths, parse_trees, config["assert_no_class_variables"])
 
     gsr.save(config["filepath_results"])
