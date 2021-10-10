@@ -7,3 +7,4 @@ A Gradescope compatible tool for performing automatic assessment of Java homewor
 * Allows required and optional files.
 * Enforces a package whitelist.
 * Enforces constant time for specific methods.
+* Enforces linear time for specific methods.

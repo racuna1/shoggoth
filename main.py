@@ -9,6 +9,8 @@ import os
 import shutil
 import javalang
 import json
+
+import analysis_java_perf
 import gradescope_result
 
 
@@ -67,44 +69,62 @@ def statement_has_repetition(class_name, method_name, statement):
                 if statement.expression.children[1].member == method_name:
                     return True
             else:
-                print("DEBUG: unknown rexp encountered in statement_has_iteration: " + str(type(statement)))
+                print("DEBUG: unknown rexp encountered in statement_has_repetition: " + str(type(statement)))
         elif type(statement.expression) is javalang.tree.MemberReference:
             pass
         else:
-            print("DEBUG: unknown expression encountered in statement_has_iteration: " + str(type(statement)))
+            print("DEBUG: unknown expression encountered in statement_has_repetition: " + str(type(statement)))
     elif type(statement) in [javalang.tree.LocalVariableDeclaration, javalang.tree.ReturnStatement,
                              javalang.tree.AssertStatement, javalang.tree.BreakStatement, javalang.tree.ContinueStatement,
                              javalang.tree.ReturnStatement, javalang.tree.ThrowStatement, javalang.tree.SynchronizedStatement,
                              javalang.tree.TryStatement, javalang.tree.SwitchStatement]:
         pass
     else:
-        print("DEBUG: unknown statement encountered in statement_has_iteration: " + str(type(statement)))
+        print("DEBUG: unknown statement encountered in statement_has_repetition: " + str(type(statement)))
 
     return False
 
 
-def follows_constant_rule(filename, method):
-    with open(filename, "r") as file:
-        data = file.read()
-        cu = javalang.parse.parse(data)
-
-        # can probably can do this on MethodDeclaration but this way prepares us for checking per class.
-        for path, node_class in cu.filter(javalang.tree.ClassDeclaration):
-            for node_method in node_class.methods:
-                method_name = node_method.name
-                if body_has_repetition(node_class.name, method_name, node_method.body) and method_name == method:
-                    return False
+def follows_constant_rule(cu, method):
+    # can probably can do this on MethodDeclaration but this way prepares us for checking per class.
+    for path, node_class in cu.filter(javalang.tree.ClassDeclaration):
+        for node_method in node_class.methods:
+            method_name = node_method.name
+            if body_has_repetition(node_class.name, method_name, node_method.body) and method_name == method:
+                return False
 
     return True
 
 
-def assert_perf_constant_rules(gsr, filepaths, methods):
+def assert_perf_constant_rules(gsr, filepaths, parse_trees, methods):
     for filename in filepaths:
-        if os.path.isfile(filename):
-            for method in methods:
-                if not follows_constant_rule(filename, method):
-                    note = "{}::{} Did not meet O(1) performance requirement.".format(os.path.basename(filename), method)
-                    gsr.zero_by_keyword(method, note)
+        cu = parse_trees[filename]
+        for method in methods:
+            if not follows_constant_rule(cu, method):
+                note = "{}::{} Did not meet O(1) performance requirement.".format(os.path.basename(filename), method)
+                gsr.zero_by_keyword(method, note)
+
+
+def follows_linear_rule(cu, method):
+    # can probably can do this on MethodDeclaration but this way prepares us for checking per class.
+    for path, node_class in cu.filter(javalang.tree.ClassDeclaration):
+        for node_method in node_class.methods:
+            method_name = node_method.name
+            est = analysis_java_perf.body_est_order(node_class.name, method_name, node_method.body)
+            print("DEBUG:" + str(method_name) + " is O(" + str(est)+")")
+            if est > 1 and method_name == method:
+                return False
+
+    return True
+
+
+def assert_perf_linear_rules(gsr, filepaths, parse_trees, methods):
+    for filename in filepaths:
+        cu = parse_trees[filename]
+        for method in methods:
+            if not follows_linear_rule(cu, method):
+                note = "{}::{} Found nested loops. Most likely does not meet O(n) performance requirement.".format(os.path.basename(filename), method)
+                gsr.zero_by_keyword(method, note)
 
 
 if __name__ == "__main__":
@@ -148,6 +168,14 @@ if __name__ == "__main__":
         gsr.load(filepath_initial_results)
         filepaths = [config["project_location"] + f for f in config["files_required"] + config["files_optional"]]
 
+        # build javalang parse trees for all files
+        parse_trees = dict()
+        for filepath in filepaths:
+            with open(filepath, "r") as file:
+                data = file.read()
+                cu = javalang.parse.parse(data)
+                parse_trees[filepath] = cu
+
         # 1) check for disallowed packages and zero scores if any are found.
         disallowed_packages = find_disallowed_packages(filepaths, config["package_whitelist"])
         if disallowed_packages:
@@ -155,6 +183,9 @@ if __name__ == "__main__":
             gsr.add_note("Disallowed packages used.", str([p[0] for p in disallowed_packages]))
 
         # 2) assert O(1) requirement
-        assert_perf_constant_rules(gsr, filepaths, config["assert_perf_constant"])
+        assert_perf_constant_rules(gsr, filepaths, parse_trees, config["assert_perf_constant"])
+
+        # 3) assert O(n) requirement
+        assert_perf_linear_rules(gsr, filepaths, parse_trees, config["assert_perf_linear"])
 
     gsr.save(config["filepath_results"])
