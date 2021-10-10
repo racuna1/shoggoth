@@ -15,5 +15,8 @@
     ],
     "assert_perf_linear":[
         "mergeQueues"
+    ],
+    "assert_no_class_variables":[
+        "CompletedMerging"
     ]
 }
