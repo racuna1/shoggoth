@@ -1,0 +1,434 @@
+make all --print-data-base --no-builtin-variables --no-builtin-rules --question
+# GNU Make 4.3
+# Built for x86_64-pc-linux-gnu
+# Copyright (C) 1988-2020 Free Software Foundation, Inc.
+# License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+# This is free software: you are free to change and redistribute it.
+# There is NO WARRANTY, to the extent permitted by law.
+
+# Make data base, printed on Tue Oct 26 12:28:20 2021
+
+# Variables
+
+# environment
+GDK_BACKEND = x11
+# environment
+LC_ALL = C
+# environment
+NO_AT_BRIDGE = 1
+# environment
+CMAKE_PREFIX_PATH = /opt/ros/melodic
+# environment
+MNI_DIR = /opt/freesurfer/mni
+# environment
+CSF_EXCEPTION_PROMPT = 1
+# environment
+VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-ecdb9623-aa1b-4c0a-be1c-bded677a7693.sock
+# environment
+CSF_XmlOcafResource = /usr/share/opencascade/resources/XmlOcafResource
+# makefile (from 'Makefile', line 2)
+SRC_DIR = ./src
+# environment
+VSCODE_CWD = /home/charles
+# environment
+WINDOWID = 52428837
+# environment
+MMGT_CLEAR = 1
+# environment
+CSF_XCAFDefaults = /usr/share/opencascade/resources/StdResource
+# environment
+CSF_PluginDefaults = /usr/share/opencascade/resources/StdResource
+# environment
+FIX_VERTEX_AREA = 
+# environment
+CASROOT = /usr
+# default
+MAKE_COMMAND := make
+# environment
+ROS_PYTHON_VERSION = 2
+# automatic
+@D = $(patsubst %/,%,$(dir $@))
+# environment
+FREESURFER_HOME = /opt/freesurfer
+# environment
+CPPUTEST_HOME = /usr
+# environment
+VSCODE_HANDLES_UNCAUGHT_ERRORS = true
+# default
+.VARIABLES := 
+# environment
+PWD = /home/charles/C_Projects/SER334/honors_contract/cpputest/test
+# automatic
+%D = $(patsubst %/,%,$(dir $%))
+# environment
+ROS_VERSION = 1
+# makefile (from 'Makefile', line 6)
+CODE_NAME = StudentScheduler
+# environment
+MAIL = /var/spool/mail/charles
+# environment
+XDG_DATA_DIRS = /usr/local/share:/usr/share:/var/lib/snapd/desktop:/usr/share
+# automatic
+^D = $(patsubst %/,%,$(dir $^))
+# environment
+VSCODE_LOG_STACK = false
+# automatic
+%F = $(notdir $%)
+# environment
+VSCODE_CODE_CACHE_PATH = /home/charles/.config/Code/CachedData/6cba118ac49a1b88332f312a8f67186f7f3c1643
+# environment
+XDG_SESSION_PATH = /org/freedesktop/DisplayManager/Session0
+# environment
+CSF_ShadersDirectory = /usr/share/opencascade/resources/Shaders
+# environment
+LANG = C
+# environment
+XAUTHORITY = /home/charles/.Xauthority
+# default
+.LOADED := 
+# default
+.INCLUDE_DIRS = /usr/include /usr/local/include /usr/include
+# makefile
+MAKEFLAGS = pqrR
+# environment
+PKG_CONFIG_PATH = /opt/ros/melodic/lib/pkgconfig
+# environment
+ROSLISP_PACKAGE_DIRECTORIES = 
+# environment
+MNI_PERL5LIB = /opt/freesurfer/mni/share/perl5
+# makefile
+CURDIR := /home/charles/C_Projects/SER334/honors_contract/cpputest/test
+# environment
+PERL5LIB = /opt/freesurfer/mni/share/perl5
+# environment
+VSCODE_PIPE_LOGGING = true
+# environment
+APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = true
+# automatic
+*D = $(patsubst %/,%,$(dir $*))
+# environment
+MFLAGS = -pqrR
+# environment
+SSH_AUTH_SOCK = /tmp/ssh-XXXXXXYocuw7/agent.1495
+# default
+.SHELLFLAGS := -c
+# environment
+CSF_MDTVTexturesDirectory = /usr/share/opencascade/resources/Textures
+# environment
+XDG_CONFIG_DIRS = /etc/xdg
+# automatic
++D = $(patsubst %/,%,$(dir $+))
+# environment
+XDG_SESSION_DESKTOP = xfce
+# environment
+VSCODE_CRASH_REPORTER_START_OPTIONS = {"companyName":"Microsoft","productName":"VSCode","submitURL":"appcenter://code?aid=fba07a4d-84bd-4fc8-a125-9640fc8ce171&uid=540d930f-75c9-4a5b-bc09-9b1260b614aa&iid=540d930f-75c9-4a5b-bc09-9b1260b614aa&sid=540d930f-75c9-4a5b-bc09-9b1260b614aa","uploadToServer":true}
+# makefile (from 'Makefile', line 1)
+MAKEFILE_LIST := Makefile
+# automatic
+@F = $(notdir $@)
+# environment
+VSCODE_VERBOSE_LOGGING = true
+# environment
+VSCODE_PID = 18789
+# environment
+XDG_SESSION_TYPE = x11
+# environment
+CUDA_PATH = /opt/cuda
+# automatic
+?D = $(patsubst %/,%,$(dir $?))
+# environment
+CSF_XSMessage = /usr/share/opencascade/resources/XSMessage
+# environment
+DRAWDEFAULT = /usr/share/opencascade/resources/DrawResources/DrawDefault
+# environment
+SESSION_MANAGER = local/charles-laptop-arch:@/tmp/.ICE-unix/1438,unix/charles-laptop-arch:/tmp/.ICE-unix/1438
+# automatic
+*F = $(notdir $*)
+# environment
+MINC_LIB_DIR = /opt/freesurfer/mni/lib
+# environment
+CHROME_DESKTOP = code-url-handler.desktop
+# environment
+CSF_SHMessage = /usr/share/opencascade/resources/SHMessage
+# environment
+DBUS_SESSION_BUS_ADDRESS = unix:path=/run/user/1000/bus
+# automatic
+<D = $(patsubst %/,%,$(dir $<))
+# environment
+VSCODE_NLS_CONFIG = {"locale":"en-us","availableLanguages":{},"_languagePackSupport":true}
+# environment
+BREAKPAD_DUMP_LOCATION = /home/charles/.config/Code/exthost Crash Reports
+# default
+MAKE_HOST := x86_64-pc-linux-gnu
+# environment
+ROS_DISTRO = melodic
+# environment
+SUBJECTS_DIR = /opt/freesurfer/subjects
+# makefile
+SHELL = /bin/sh
+# default
+MAKECMDGOALS := all
+# environment
+LD_LIBRARY_PATH = /opt/ros/melodic/lib:/opt/freesurfer/lib:
+# environment
+SHLVL = 2
+# environment
+FMRI_ANALYSIS_DIR = /opt/freesurfer/fsfast
+# environment
+CSF_TObjDefaults = /usr/share/opencascade/resources/StdResource
+# environment
+MAKELEVEL := 0
+# default
+MAKE = $(MAKE_COMMAND)
+# environment
+PATH = /opt/ros/melodic/bin:/usr/local/MATLAB/R2019a/bin:/opt/freesurfer/bin:/opt/freesurfer/fsfast/bin:/opt/freesurfer/tktools:/opt/freesurfer/mni/bin:/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/opt/cuda/bin:/opt/cuda/nsight_compute:/opt/cuda/nsight_systems/bin:/opt/freesurfer/bin:/usr/lib/jvm/default/bin:/usr/bin/site_perl:/usr/bin/vendor_perl:/usr/bin/core_perl:/var/lib/snapd/snap/bin:/home/charles/.local/bin/:/home/charles/.local/share/gem/ruby/3.0.0/bin
+# default
+MAKEFILES := 
+# environment
+MOTD_SHOWN = pam
+# environment
+CSF_OCCTResourcePath = /usr/share/opencascade/resources
+# automatic
+^F = $(notdir $^)
+# environment
+FSF_OUTPUT_FORMAT = nii.gz
+# environment
+VSCODE_LOG_NATIVE = false
+# environment
+CSF_StandardLiteDefaults = /usr/share/opencascade/resources/StdResource
+# environment
+CSF_STEPDefaults = /usr/share/opencascade/resources/XSTEPResource
+# automatic
+?F = $(notdir $?)
+# environment
+XDG_SEAT = seat0
+# environment
+XDG_CURRENT_DESKTOP = XFCE
+# environment
+CSF_MIGRATION_TYPES = /usr/share/opencascade/resources/StdResource/MigrationSheet.txt
+# automatic
++F = $(notdir $+)
+# environment
+XDG_SEAT_PATH = /org/freedesktop/DisplayManager/Seat0
+# environment
+DESKTOP_SESSION = xfce
+# environment
+ORIGINAL_XDG_CURRENT_DESKTOP = XFCE
+# 'override' directive
+GNUMAKEFLAGS := 
+# environment
+OS = Linux
+# environment
+FS_OVERRIDE = 0
+# environment
+LOGNAME = charles
+# environment
+CSF_LANGUAGE = us
+# environment
+ROS_MASTER_URI = http://localhost:11311
+# environment
+XDG_VTNR = 7
+# makefile
+.DEFAULT_GOAL := test
+# environment
+CSF_TObjMessage = /usr/share/opencascade/resources/TObj
+# environment
+DISPLAY = :0.0
+# environment
+GTK_MODULES = canberra-gtk-module:canberra-gtk-module
+# environment
+USER = charles
+# default
+MAKE_VERSION := 4.3
+# environment
+ROS_PACKAGE_PATH = /opt/ros/melodic/share
+# environment
+FSFAST_HOME = /opt/freesurfer/fsfast
+# makefile (from 'Makefile', line 5)
+TEST_DIR = t
+# environment
+PYTHONPATH = /opt/ros/melodic/lib/python3.8/site-packages::/home/charles/Python_Projects/code_idealab_tools/:/core/roslib/src
+# environment
+SSH_AGENT_PID = 1496
+# environment
+_ = /usr/bin/make
+# environment
+MOZ_PLUGIN_PATH = /usr/lib/mozilla/plugins
+# environment
+XDG_RUNTIME_DIR = /run/user/1000
+# environment
+COLORTERM = truecolor
+# environment
+CSF_DrawPluginDefaults = /usr/share/opencascade/resources/DrawResources
+# environment
+CSF_IGESDefaults = /usr/share/opencascade/resources/XSTEPResource
+# environment
+XDG_SESSION_CLASS = user
+# environment
+VSCODE_AMD_ENTRYPOINT = vs/workbench/services/extensions/node/extensionHostProcess
+# environment
+HOME = /home/charles
+# environment
+ROS_ETC_DIR = /opt/ros/melodic/etc/ros
+# environment
+LOCAL_DIR = /opt/freesurfer/local
+# environment
+ELECTRON_RUN_AS_NODE = 1
+# environment
+DRAWHOME = /usr/share/opencascade/resources/DrawResources
+ 
+# environment
+VSCODE_IPC_HOOK = /run/user/1000/vscode-2990f31a-1.61.2-main.sock
+# environment
+TERM = xterm-256color
+# environment
+XDG_SESSION_ID = 2
+# default
+.RECIPEPREFIX := 
+# automatic
+<F = $(notdir $<)
+# makefile (from 'Makefile', line 4)
+OUT = example
+# default
+SUFFIXES := 
+# environment
+VSCODE_CLI = 1
+# environment
+ELECTRON_NO_ATTACH_CONSOLE = 1
+# environment
+VTE_VERSION = 6600
+# environment
+XDG_GREETER_DATA_DIR = /var/lib/lightdm-data/charles
+# environment
+CSF_StandardDefaults = /usr/share/opencascade/resources/StdResource
+# default
+.FEATURES := target-specific order-only second-expansion else-if shortest-stem undefine oneshell nocomment grouped-target extra-prereqs archives jobserver output-sync check-symlink guile load
+# makefile (from 'Makefile', line 3)
+CODE_DIR = $(SRC_DIR)/code
+# environment
+XDG_MENU_PREFIX = xfce-
+# environment
+MINC_BIN_DIR = /opt/freesurfer/mni/bin
+# environment
+GDMSESSION = xfce
+# environment
+ROS_ROOT = /opt/ros/melodic/share/ros
+# variable set hash-table stats:
+# Load=151/1024=15%, Rehash=0, Collisions=13/185=7%
+
+# Pattern-specific Variable Values
+
+# No pattern-specific variable values.
+
+# Directories
+
+# . (device 66308, inode 552802): 9 files, no impossibilities.
+
+# 9 files, no impossibilities in 1 directories.
+
+# Implicit Rules
+
+# No implicit rules.
+
+# Files
+
+# Not a target:
+Makefile:
+#  Implicit rule search has been done.
+#  Last modified 2021-10-14 15:30:55.283337683
+#  File has been updated.
+#  Successfully updated.
+
+clean: test_clean
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 23):
+	rm $(SRC_DIR)/*.o $(CODE_DIR)/*.o $(OUT)
+
+test_clean:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 12):
+	make -C $(TEST_DIR) clean
+
+# Not a target:
+.DEFAULT:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+all: test main
+#  Command line target.
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has been updated.
+#  Needs to be updated (-q is set).
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/4=0%
+
+main: StudentScheduler.o
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 18):
+	gcc -I$(CODE_DIR) $(CODE_DIR)/$(CODE_NAME).o $(SRC_DIR)/main.cpp -o $(OUT)
+
+test:
+#  Implicit rule search has not been done.
+#  Implicit/static pattern stem: ''
+#  File does not exist.
+#  File has been updated.
+#  Needs to be updated (-q is set).
+# automatic
+# @ := test
+# automatic
+# * := 
+# automatic
+# < := 
+# automatic
+# + := 
+# automatic
+# % := 
+# automatic
+# ^ := 
+# automatic
+# ? := 
+# automatic
+# | := 
+# variable set hash-table stats:
+# Load=8/32=25%, Rehash=0, Collisions=1/12=8%
+#  recipe to execute (from 'Makefile', line 9):
+	make -C $(TEST_DIR)
+
+# Not a target:
+.SUFFIXES:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+StudentScheduler.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 15):
+	gcc -c -I$(CODE_DIR) $(CODE_DIR)/$(CODE_NAME).c -o $(CODE_DIR)/$(CODE_NAME).o
+
+# files hash-table stats:
+# Load=9/1024=1%, Rehash=0, Collisions=0/25=0%
+# VPATH Search Paths
+
+# No 'vpath' search paths.
+
+# No general ('VPATH' variable) search path.
+
+# strcache buffers: 1 (0) / strings = 19 / storage = 165 B / avg = 8 B
+# current buf: size = 8162 B / used = 165 B / count = 19 / avg = 8 B
+
+# strcache performance: lookups = 35 / hit rate = 45%
+# hash-table stats:
+# Load=19/8192=0%, Rehash=0, Collisions=0/35=0%
+# Finished Make data base on Tue Oct 26 12:28:20 2021
+
+ 
