@@ -1,7 +1,7 @@
 # we don’t want to use relative paths, so we set these variables
 PROJECT_DIR=/autograder/source/SERXXX_AssignmentNum_Test_Project
 SRC_DIR=$(PROJECT_DIR)/src
-TEST_DIR=$(PROJECT_DIR)/test
+TEST_DIR=$(PROJECT_DIR)/tests
 
 # specify where the source code and includes are located
 INCLUDE_DIRS=$(SRC_DIR)/code /autograder/cpputest/include

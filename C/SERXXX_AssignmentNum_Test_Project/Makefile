@@ -2,7 +2,7 @@
 SRC_DIR=./src
 CODE_DIR=$(SRC_DIR)/code
 OUT=example
-TEST_DIR=test
+TEST_DIR=tests
 CODE_NAME=StudentAssignment
 
 test:
