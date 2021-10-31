@@ -3,4 +3,6 @@
 cd /autograder/source
 
 #start shoggoth
-python3 main.py
+#python3 main.py
+
+./run_cpputest.sh
