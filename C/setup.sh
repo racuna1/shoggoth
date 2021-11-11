@@ -12,3 +12,7 @@ make
 chmod +x /autograder/source/run_cpputest.sh
 
 dos2unix /autograder/source/run_cpputest.sh
+
+cp /autograder/submission/* /autograder/source/SERXXX_AssignmentNum_Test_Project/src/code/
+
+mkdir -p /autograder

@@ -2,7 +2,7 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-#include "code/StudentScheduler.h"
+int main_stuff();
 #ifdef __cplusplus
 }
 #endif
