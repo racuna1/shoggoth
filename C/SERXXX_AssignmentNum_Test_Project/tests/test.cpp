@@ -2,11 +2,11 @@
 #include "CppUTest/TestHarness.h"
 #include "include.h"
 
-TEST_GROUP(AwesomeExamples)
+TEST_GROUP(tests)
 {
 };
 
-TEST(AwesomeExamples, FirstExample)
+TEST(tests, FirstTest)
 {
   int x = main_stuff();
   CHECK_EQUAL(0, x);

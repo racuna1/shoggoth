@@ -16,11 +16,18 @@ TEST_TARGET=example
 # where the cpputest library is located
 CPPUTEST_HOME=/autograder/cpputest
 
+#change directories for local environment (not docker container)
+#comment this line out for deployment to gradescope
+include localDirs.mk
+
 #manually set warn flags so we don't end up with something idiotic like -Wall -Wextra -Werror (seriously how is that default???)
 CPPUTEST_WARNINGFLAGS = -Wall -Wextra -Wshadow -Wswitch-default -Wswitch-enum -Wconversion -Wno-long-long
 
 #generate coverage maps
-CPPUTEST_USE_GCOV=Y
+#CPPUTEST_USE_GCOV=Y
+
+#flags for test executable
+CPPUTEST_EXE_FLAGS = -o junit
 
 # run MakefileWorker.mk with the variables defined here
 include MakefileWorker.mk
