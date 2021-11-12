@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+cp /autograder/submission/* /autograder/source/SERXXX_AssignmentNum_Test_Project/src/code/
+
 cd /autograder/source
 
 #start shoggoth
