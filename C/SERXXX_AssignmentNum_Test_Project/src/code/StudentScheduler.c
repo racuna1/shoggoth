@@ -60,7 +60,7 @@ int file_exists(char string[]);
 
 //main entry point. Starts the program by displaying a welcome and beginning an 
 //input loop that displays a menu and processes user input. Pressing q quits.      
-int main_stuff() {
+int submission_main(int argc, char* argv[]) {
     schedule_load();
 
 	char input_buffer;

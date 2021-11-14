@@ -1,0 +1,22 @@
+{
+    "filepath_results": "/autograder/results/results.json",
+    "submission_location": "SERXXX_AssignmentNum_Test_Project",
+    "project_location": "/autograder/source/src/main/java/edu/ser222/m02_02/",
+    "files_required":[
+        "StudentScheduler.c"
+    ],
+    "files_optional":[
+    ],
+    "include_whitelist":[
+        "<stdlib>",
+        "<stdio>"
+    ],
+    "assert_perf_constant":[
+    ],
+    "assert_perf_linear":[
+        "mergeQueues"
+    ],
+    "assert_no_class_variables":[
+        "CompletedMerging"
+    ]
+}
