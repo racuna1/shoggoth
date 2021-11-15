@@ -7,9 +7,9 @@
     ],
     "files_optional":[
     ],
-    "include_whitelist":[
-        "<stdlib>",
-        "<stdio>"
+    "whitelist":[
+        "<stdlib.h>",
+        "<stdio.h>"
     ],
     "assert_perf_constant":[
     ],

@@ -9,7 +9,6 @@ import sys
 import os
 import json
 
-
 # Here's the AST approach. The problem with this is that it utilizes fake headers 
 # (see https://eli.thegreenplace.net/2015/on-parsing-c-type-declarations-and-fake-headers/)
 # This isn't a problem going from C code to an AST. The problem arises when translating back 
@@ -52,8 +51,8 @@ import json
 def search_dir(dir):
     for root, dirs, files in os.walk(dir):
 
-        if not files:
-            return
+        # if not files:
+        #     return
 
         c_files = list(filter(lambda f: re.match('.*\.c$', f), files))
 
