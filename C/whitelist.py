@@ -2,15 +2,11 @@ import json
 import os
 import re
 
-
 def found_disallowed(path, allowed):
     with open(path, 'r') as file:
         regex = "#include (?P<name><.*>)"
         found = re.finditer(regex, file.read())
-        disallowed = [i.group("name") for i in found if i.group("name") not in allowed]
-        if disallowed:
-            return True
-        return False
+        return [i.group("name") for i in found if i.group("name") not in allowed]
 
 
 def scan_disallowed(filepath, allowed):

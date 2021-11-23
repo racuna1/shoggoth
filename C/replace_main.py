@@ -12,7 +12,7 @@ import json
 # Here's the AST approach. The problem with this is that it utilizes fake headers 
 # (see https://eli.thegreenplace.net/2015/on-parsing-c-type-declarations-and-fake-headers/)
 # This isn't a problem going from C code to an AST. The problem arises when translating back 
-# to an AST. pycparser includes all of the fake headers it used to generate the AST. This 
+# to C code. pycparser includes all of the fake headers it used to generate the AST. This 
 # leads to redefined variables in the C code and causes compilation to fail. The alternative 
 # approach is to do a simple regex search on each file within the submission, which is what I did.
 # I'm keeping it around in case it proves useful later on.
