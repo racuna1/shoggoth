@@ -8,3 +8,5 @@ cd /autograder/source
 #python3 main.py
 
 ./run_cpputest.sh
+
+python3 convert_unit_tests.py

@@ -1,4 +1,6 @@
-import gradescope_result
+__author__ = "Charles Jeffries"
+
+import gradescope_result_V2
 import xml.etree.ElementTree as ET
 
 def parseXML(file):
@@ -7,6 +9,8 @@ def parseXML(file):
     root = tree.getroot()
 
     testResults = []
+
+    num = 0
 
     for testCase in root.findall('testcase'):
         result = {}
@@ -22,8 +26,12 @@ def parseXML(file):
             fail['message'] = failure.get('message')
             result['failCount'] = result.get('failCount') + 1
             failures.append(fail)
+        
+        result['failues'] = failures
+        result['testNum'] = num
 
         testResults.append(result)
+        num += 1
 
     return testResults
     
@@ -32,4 +40,17 @@ def parseXML(file):
 
 
 if __name__ == "__main__":
-    foo = 5
+    testResults = parseXML('./SERXXX_AssignmentNum_Test_Project/tests/cpputest_tests.xml')
+
+    #print(testResults);
+
+    gr = gradescope_result_V2.GradescopeResult()
+    
+    for tr in testResults:
+        if tr['failCount'] > 0:
+            gr.add_test_result(tr['name'], str(tr['testNum']), 0, 1, 'Failed ' + str(tr['failCount']) + ' test cases.')
+        else:
+            gr.add_test_result(tr['name'], str(tr['testNum']), 1, 1, 'Passed all test cases.')
+    
+    gr.save('/autograder/results/results.json')
+
