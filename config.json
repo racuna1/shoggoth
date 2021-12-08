@@ -1,16 +1,21 @@
 {
     "filepath_results": "/autograder/results/results.json",
     "submission_location": "/autograder/submission/",
-    "project_location": "/autograder/source/src/main/java/edu/ser222/m02_02/",
+    "project_location": "/autograder/source/C/SERXXX_AssignmentNum_Test_Project/",
     "files_required":[
-        "CompletedMerging.java"
+        "StudentScheduler.c"
+    ],
+    "main_file":[
+        "StudentScheduler.c"
     ],
     "files_optional":[
     ],
-    "package_whitelist":[
-        "java.util.Arrays",
-        "java.util.Random"
+    "whitelist":[
+        "<stdlib.h>",
+        "<stdio.h>",
+        "<string.h>"
     ],
+    "prohibit_globals": true,
     "assert_perf_constant":[
     ],
     "assert_perf_linear":[
@@ -18,5 +23,6 @@
     ],
     "assert_no_class_variables":[
         "CompletedMerging"
-    ]
+    ],
+    "mode_c_testing": true
 }

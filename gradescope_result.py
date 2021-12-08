@@ -1,4 +1,4 @@
-__author__ = "Ruben Acuna"
+__author__ = "Ruben Acuna, Charles Jeffries"
 
 import json
 
@@ -30,6 +30,16 @@ class GradescopeResult:
                      'max_score': 0.0,
                      'visibility': 'visible',
                      'output': output}
+
+        self.results["tests"].append(new_entry)
+
+    #CJ
+    def add_test_result(self, name, score, max_score, output):
+        new_entry = {'name': name,
+                        'score': score,
+                        'max_score': max_score,
+                        'visibility': 'visible',
+                        'output': output}
 
         self.results["tests"].append(new_entry)
 
@@ -66,3 +76,15 @@ class GradescopeResult:
                               "max_score": 0.0,
                               "visibility": "visible",
                               "output": "Could not find expected file(s).\n"}]}
+
+    def set_result_illegalincludes(self, whitelist):
+        self.results = {"execution_time": 1,
+                   "stdout_visibility": "visible",
+                   "tests": [{"name": "Include Check",
+                              "number": "",
+                              "score": 0.0,
+                              "max_score": 0.0,
+                              "visibility": "visible",
+                              "output": "Disallowed include files found. Allowed include files are {}".format(whitelist)}]}
+
+                              

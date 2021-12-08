@@ -13,6 +13,12 @@ import json
 import analysis_java_perf
 import gradescope_result
 
+#C imports
+from replace_main import rename_main
+from detect_globals import detect_globals
+from convert_unit_tests import parseXML
+from whitelist import scan_disallowed
+
 
 def extract_imports(filename):
     with open(filename, "r") as file:
@@ -148,59 +154,108 @@ if __name__ == "__main__":
 
     gsr = gradescope_result.GradescopeResult()
 
-    # verify and copy required files.
-    for required in config["files_required"]:
-        filepath_required = config["submission_location"] + required
-        if not os.path.isfile(filepath_required):
-            print("shoggoth: {} does not exist.".format(filepath_required))
-            gsr.set_result_filemissing()
+    #C testing
+    if config["mode_c_testing"]:
+        # verify and copy required files.
+        for required in config["files_required"]:
+            filepath_required = config["submission_location"] + required
+            if not os.path.isfile(filepath_required):
+                print("shoggoth: {} does not exist.".format(filepath_required))
+                gsr.set_result_filemissing()
+                gsr.save(config["filepath_results"])
+                exit()
+            else:
+                if config["prohibit_globals"]:
+                    if detect_globals(filepath_required):
+                        gsr.add_note("Global Variable", "Global variable detected in {}. Global Variables are not allowed.".format(required))
+                    
+                if scan_disallowed(config["submission_location"], config["whitelist"]):
+                    gsr.set_result_illegalincludes(config["whitelist"])
+                    gsr.save(config["filepath_results"])
+                    exit()
+
+                if required == config["main_file"]:
+                    rename_main(required)
+
+                shutil.copy(filepath_required, config["project_location"] + "src/code/")
+
+        status = os.system("cd " + config["project_location"] + "; make all")
+
+        #CJ
+        #from my testing I think status is 1 if compilation fails, and 2 if tests fail, and 0 if all are good
+        if status == 1:
+            gsr.set_result_buildfail()
             gsr.save(config["filepath_results"])
             exit()
+        elif status == 2:
+            gsr.add_note("Note", "Some tests may have failed.")
+
+        shutil.copy(config["project_location"] + "tests/cpputest_tests.xml", "/autograder/source/test_results/")
+
+        testResults = parseXML("/autograder/source/test_results/cpputest_tests.xml")
+
+        for tr in testResults:
+            if tr['failCount'] > 0:
+                gsr.add_test_result(tr['name'], 0, 1, 'Failed ' + str(tr['failCount']) + ' test cases.')
+            else:
+                gsr.add_test_result(tr['name'], 1, 1, 'Passed all test cases.')
+
+
+    #Java testing
+    else: 
+        # verify and copy required files.
+        for required in config["files_required"]:
+            filepath_required = config["submission_location"] + required
+            if not os.path.isfile(filepath_required):
+                print("shoggoth: {} does not exist.".format(filepath_required))
+                gsr.set_result_filemissing()
+                gsr.save(config["filepath_results"])
+                exit()
+            else:
+                shutil.copy(filepath_required, config["project_location"])
+
+        print("shoggoth: all required files exist.")
+
+        # copy any optional files
+        for optional in config["files_optional"]:
+            filepath_optional = config["submission_location"] + optional
+            if os.path.isfile(filepath_optional):
+                shutil.copy(filepath_optional, config["project_location"])
+
+        ret = os.system("mvn -q compile")
+
+        # check if compilation failed
+        if ret:
+            gsr.set_result_buildfail()
         else:
-            shutil.copy(filepath_required, config["project_location"])
+            filepath_initial_results = "/autograder/results/results_wip.json"
+            os.system("mvn -q exec:java > " + filepath_initial_results)
 
-    print("shoggoth: all required files exist.")
+            # compilation succeeded, apply grading rules.
+            gsr.load(filepath_initial_results)
+            filepaths = [config["project_location"] + f for f in config["files_required"] + config["files_optional"]]
 
-    # copy any optional files
-    for optional in config["files_optional"]:
-        filepath_optional = config["submission_location"] + optional
-        if os.path.isfile(filepath_optional):
-            shutil.copy(filepath_optional, config["project_location"])
+            # build javalang parse trees for all files
+            parse_trees = dict()
+            for filepath in filepaths:
+                with open(filepath, "r") as file:
+                    data = file.read()
+                    cu = javalang.parse.parse(data)
+                    parse_trees[filepath] = cu
 
-    ret = os.system("mvn -q compile")
+            # 1) check for disallowed packages and zero scores if any are found.
+            disallowed_packages = find_disallowed_packages(filepaths, config["package_whitelist"])
+            if disallowed_packages:
+                gsr.zero_all()
+                gsr.add_note("Disallowed packages used.", str([p[0] for p in disallowed_packages]))
 
-    # check if compilation failed
-    if ret:
-        gsr.set_result_buildfail()
-    else:
-        filepath_initial_results = "/autograder/results/results_wip.json"
-        os.system("mvn -q exec:java > " + filepath_initial_results)
+            # 2) assert O(1) requirement
+            assert_perf_constant_rules(gsr, filepaths, parse_trees, config["assert_perf_constant"])
 
-        # compilation succeeded, apply grading rules.
-        gsr.load(filepath_initial_results)
-        filepaths = [config["project_location"] + f for f in config["files_required"] + config["files_optional"]]
+            # 3) assert O(n) requirement
+            assert_perf_linear_rules(gsr, filepaths, parse_trees, config["assert_perf_linear"])
 
-        # build javalang parse trees for all files
-        parse_trees = dict()
-        for filepath in filepaths:
-            with open(filepath, "r") as file:
-                data = file.read()
-                cu = javalang.parse.parse(data)
-                parse_trees[filepath] = cu
-
-        # 1) check for disallowed packages and zero scores if any are found.
-        disallowed_packages = find_disallowed_packages(filepaths, config["package_whitelist"])
-        if disallowed_packages:
-            gsr.zero_all()
-            gsr.add_note("Disallowed packages used.", str([p[0] for p in disallowed_packages]))
-
-        # 2) assert O(1) requirement
-        assert_perf_constant_rules(gsr, filepaths, parse_trees, config["assert_perf_constant"])
-
-        # 3) assert O(n) requirement
-        assert_perf_linear_rules(gsr, filepaths, parse_trees, config["assert_perf_linear"])
-
-        # 4) assert no class variables
-        assert_no_class_variables(gsr, filepaths, parse_trees, config["assert_no_class_variables"])
+            # 4) assert no class variables
+            assert_no_class_variables(gsr, filepaths, parse_trees, config["assert_no_class_variables"])
 
     gsr.save(config["filepath_results"])

@@ -1,7 +1,7 @@
 {
     "filepath_results": "/autograder/results/results.json",
     "submission_location": "/autograder/submission/",
-    "project_location": "/autograder/source/SERXXX_AssignmentNum_Test_Project/",
+    "project_location": "/autograder/source/C/SERXXX_AssignmentNum_Test_Project/",
     "files_required":[
         "StudentScheduler.c"
     ],
@@ -23,5 +23,6 @@
     ],
     "assert_no_class_variables":[
         "CompletedMerging"
-    ]
+    ],
+    "mode_c_testing": true
 }
