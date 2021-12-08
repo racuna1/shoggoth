@@ -48,9 +48,9 @@ if __name__ == "__main__":
     
     for tr in testResults:
         if tr['failCount'] > 0:
-            gr.add_test_result(tr['name'], str(tr['testNum']), 0, 1, 'Failed ' + str(tr['failCount']) + ' test cases.')
+            gr.add_test_result(tr['name'], 0, 1, 'Failed ' + str(tr['failCount']) + ' test cases.')
         else:
-            gr.add_test_result(tr['name'], str(tr['testNum']), 1, 1, 'Passed all test cases.')
+            gr.add_test_result(tr['name'], 1, 1, 'Passed all test cases.')
     
     gr.save('/autograder/results/results.json')
 

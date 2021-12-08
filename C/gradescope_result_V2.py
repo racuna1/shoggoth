@@ -34,9 +34,8 @@ class GradescopeResult:
         self.results["tests"].append(new_entry)
 
     #CJ
-    def add_test_result(self, name, number, score, max_score, output):
+    def add_test_result(self, name, score, max_score, output):
         new_entry = {'name': name,
-                        'number': number,
                         'score': score,
                         'max_score': max_score,
                         'visibility': 'visible',
