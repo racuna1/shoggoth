@@ -35,7 +35,7 @@ if __name__ == "__main__":
             if required == config["main_file"]:
                 rename_main(required)
 
-            shutil.copy(filepath_required, config["project_location"])
+            shutil.copy(filepath_required, config["project_location"] + "src/code/")
 
     status = os.system("./run_cpputest.sh")
 
