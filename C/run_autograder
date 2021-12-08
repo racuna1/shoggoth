@@ -5,7 +5,7 @@
 cd /autograder/source
 
 #start shoggoth
-python3 main.py
+python3 main_C.py
 
 #./run_cpputest.sh
 
