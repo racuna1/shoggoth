@@ -5,6 +5,9 @@
     "files_required":[
         "StudentScheduler.c"
     ],
+    "main_file":[
+        "StudentScheduler.c"
+    ],
     "files_optional":[
     ],
     "whitelist":[

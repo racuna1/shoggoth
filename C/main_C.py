@@ -2,8 +2,7 @@
 import os
 import replace_main
 import detect_globals
-import replace_main
-import convert_unit_tests
+from convert_unit_tests import parseXML
 import whitelist
 import json
 import gradescope_result_V2
@@ -24,10 +23,45 @@ if __name__ == "__main__":
             gsr.save(config["filepath_results"])
             exit()
         else:
-            if detect_globals(filepath_required):
-                gsr.add_note("Global Variable", "Global variable detected in {}. Global Variables are not allowed.".format(required))
-            
+            if config["prohibit_globals"]:
+                if detect_globals(filepath_required):
+                    gsr.add_note("Global Variable", "Global variable detected in {}. Global Variables are not allowed.".format(required))
+                
+            if whitelist.scan_disallowed(config["submission_location"], config["whitelist"]):
+                gsr.set_result_illegalincludes(whitelist)
+                gsr.save(config["filepath_results"])
+                exit()
+
+            if required == config["main_file"]:
+                replace_main(required)
+
             shutil.copy(filepath_required, config["project_location"])
+
+    status = os.system("./run_cpputest.sh")
+
+    #CJ
+    #from my testing I think status is 1 if compilation fails, and 2 if tests fail, and 0 if all are good
+    if status == 1:
+        gsr.set_result_buildfail()
+        gsr.save(config["filepath_results"])
+        exit()
+    elif status == 2:
+        gsr.add_note("Note", "Some tests may have failed.")
+
+    shutil.copy(config["submission_location"] + "tests/cpputest_tests.xml", "/autograder/source/test_results/")
+
+    testResults = parseXML("/autograder/source/test_results/cpputest_tests.xml")
+
+    for tr in testResults:
+        if tr['failCount'] > 0:
+            gsr.add_test_result(tr['name'], 0, 1, 'Failed ' + str(tr['failCount']) + ' test cases.')
+        else:
+            gsr.add_test_result(tr['name'], 1, 1, 'Passed all test cases.')
+    
+
+    gsr.save(config["filepath_results"])
+
+    
 
     
 
