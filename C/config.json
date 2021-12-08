@@ -12,7 +12,8 @@
     ],
     "whitelist":[
         "<stdlib.h>",
-        "<stdio.h>"
+        "<stdio.h>",
+        "<string.h>"
     ],
     "prohibit_globals": true,
     "assert_perf_constant":[

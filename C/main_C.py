@@ -1,9 +1,9 @@
 
 import os
-import replace_main
-import detect_globals
+from replace_main import rename_main
+from detect_globals import detect_globals
 from convert_unit_tests import parseXML
-import whitelist
+from whitelist import scan_disallowed
 import json
 import gradescope_result_V2
 import shutil
@@ -27,13 +27,13 @@ if __name__ == "__main__":
                 if detect_globals(filepath_required):
                     gsr.add_note("Global Variable", "Global variable detected in {}. Global Variables are not allowed.".format(required))
                 
-            if whitelist.scan_disallowed(config["submission_location"], config["whitelist"]):
-                gsr.set_result_illegalincludes(whitelist)
+            if scan_disallowed(config["submission_location"], config["whitelist"]):
+                gsr.set_result_illegalincludes(config["whitelist"])
                 gsr.save(config["filepath_results"])
                 exit()
 
             if required == config["main_file"]:
-                replace_main(required)
+                rename_main(required)
 
             shutil.copy(filepath_required, config["project_location"])
 
@@ -48,7 +48,7 @@ if __name__ == "__main__":
     elif status == 2:
         gsr.add_note("Note", "Some tests may have failed.")
 
-    shutil.copy(config["submission_location"] + "tests/cpputest_tests.xml", "/autograder/source/test_results/")
+    shutil.copy(config["project_location"] + "tests/cpputest_tests.xml", "/autograder/source/test_results/")
 
     testResults = parseXML("/autograder/source/test_results/cpputest_tests.xml")
 
