@@ -13,7 +13,7 @@ make
 cd /autograder
 git clone https://github.com/eliben/pycparser.git
 cd pycparser
-python setup.py install
+python3 setup.py install
 
 chmod +x /autograder/source/run_cpputest.sh
 
