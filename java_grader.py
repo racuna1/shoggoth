@@ -68,31 +68,7 @@ def follows_linear_rule(cu, method):
 
     return True
 
-import os
-import shutil
-import json
 
-import gradescope_result
-import c_grader
-import java_grader
-
-if __name__ == "__main__":
-    # add manually installed version of maven to path
-    os.environ["PATH"] += os.pathsep + "/autograder/apache-maven-3.8.3/bin"
-
-    with open("config.json") as file:
-        config = json.load(file)
-
-    gsr = gradescope_result.GradescopeResult()
-
-    # C testing
-    if config["mode_c_testing"]:
-        c_grader.grade(config, gsr)
-    # Java testing
-    else:
-        java_grader.grade(config, gsr)
-
-    gsr.save(config["filepath_results"])
 def assert_perf_linear_rules(gsr, filepaths, parse_trees, methods):
     for filename in filepaths:
         cu = parse_trees[filename]
