@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
-cp /autograder/submission/* /autograder/source/SERXXX_AssignmentNum_Test_Project/src/code/
+#cp /autograder/submission/* /autograder/source/SERXXX_AssignmentNum_Test_Project/src/code/
 
 cd /autograder/source
 
 #start shoggoth
-#python3 main.py
+python3 main.py
 
-./run_cpputest.sh
+#./run_cpputest.sh
 
-python3 convert_unit_tests.py
+#python3 convert_unit_tests.py

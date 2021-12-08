@@ -1,7 +1,7 @@
 {
     "filepath_results": "/autograder/results/results.json",
-    "submission_location": "SERXXX_AssignmentNum_Test_Project/",
-    "project_location": "/autograder/source/src/main/java/edu/ser222/m02_02/",
+    "submission_location": "autograder/submission/",
+    "project_location": "/autograder/source/SERXXX_AssignmentNum_Test_Project/src/code/",
     "files_required":[
         "StudentScheduler.c"
     ],
