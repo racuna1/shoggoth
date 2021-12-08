@@ -9,6 +9,12 @@ autoreconf . -i
 ./configure
 make
 
+# grabs pycparser
+cd /autograder
+git clone https://github.com/eliben/pycparser.git
+cd pycparser
+sudo python setup.py install
+
 chmod +x /autograder/source/run_cpputest.sh
 
 dos2unix /autograder/source/run_cpputest.sh

@@ -38,7 +38,7 @@ class DeclVisitor(c_ast.NodeVisitor):
 def detect_globals(filename):
     ast = parse_file(filename, use_cpp=True,
                      cpp_path='gcc',
-                     cpp_args=['-E', r'-Iutils/fake_libc_include'])
+                     cpp_args=['-E', r'-I/autograder/pycparser/utils/fake_libc_include'])
 
     dv = DeclVisitor()
     dv.visit(ast)
