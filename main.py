@@ -24,6 +24,7 @@ if __name__ == "__main__":
 
     # C testing
     if config["mode_c_testing"]:
+        print("starting C autograder")
         c_grader.grade(config, gsr)
     # Java testing
     else:
