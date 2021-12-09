@@ -27,7 +27,7 @@ def parseXML(file):
             result['failCount'] = result.get('failCount') + 1
             failures.append(fail)
         
-        result['failues'] = failures
+        result['failures'] = failures
         result['testNum'] = num
 
         testResults.append(result)

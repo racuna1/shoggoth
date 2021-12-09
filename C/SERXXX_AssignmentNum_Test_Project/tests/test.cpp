@@ -71,12 +71,12 @@ TEST(tests, CreditCountTest)
     node = node->next;
     free(tmp);
   }
-  //course_collection = NULL;
+  course_collection = NULL;
 
   CHECK_EQUAL(0, getCreditCount()); //case 4
 }
 
-TEST(tests, SecondTest)
+TEST(tests, DuplicateClassTest)
 {
   
   CHECK_EQUAL(0, duplicate_class(SER, 333, "foo", 3)); //case 1

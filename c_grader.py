@@ -12,6 +12,7 @@ from whitelist import scan_disallowed
 def grade(config, gsr):
     # verify and copy required files.
     for required in config["files_required"]:
+        print("verifying file " + required) 
         filepath_required = config["submission_location"] + required
         if not os.path.isfile(filepath_required):
             print("shoggoth: {} does not exist.".format(filepath_required))
@@ -30,6 +31,7 @@ def grade(config, gsr):
                 exit()
 
             if required == config["main_file"]:
+                print("renaming main method")
                 rename_main(filepath_required)
 
             shutil.copy(filepath_required,
@@ -60,8 +62,16 @@ def grade(config, gsr):
         "/autograder/source/test_results/cpputest_tests.xml")
 
     for tr in testResults:
+        val = 0
+        for ut in config["unit_tests"]:
+            if(ut["name"] == tr['name']):
+                val = ut["points"]
         if tr['failCount'] > 0:
+            messageString = ""
+            messageString += 'Failed ' + str(tr['failCount']) + ' test cases.\n'
+            for failure in tr['failures']:
+                messageString += failure['message']
             gsr.add_test_result(
-                tr['name'], 0, 1, 'Failed ' + str(tr['failCount']) + ' test cases.')
+                tr['name'], 0, val, 'Failed ' + str(tr['failCount']) + ' test cases.')
         else:
-            gsr.add_test_result(tr['name'], 1, 1, 'Passed all test cases.')
+            gsr.add_test_result(tr['name'], val, val, 'Passed all test cases.')

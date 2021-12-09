@@ -22,5 +22,15 @@
     "assert_no_class_variables":[
         "CompletedMerging"
     ],
-    "mode_c_testing": true
+    "mode_c_testing": true,
+    "unit_tests": [
+        {
+            "name": "CreditCountTest",
+            "points": 5
+        },
+        {
+            "name": "DuplicateClassTest",
+            "points": 8
+        }
+    ]
 }
