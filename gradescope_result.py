@@ -43,6 +43,9 @@ class GradescopeResult:
 
         self.results["tests"].append(new_entry)
 
+    def set_max_score(self, max_score):
+        self.results.append({'score': max_score})
+        
     def zero_all(self):
         for test in self.results["tests"]:
             test["score"] = 0.0

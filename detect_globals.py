@@ -1,3 +1,5 @@
+__author__ = "Oluwamayowa Esan"
+
 from pycparser import parse_file, c_ast
 from pycparser.c_ast import *
 import sys

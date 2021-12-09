@@ -1,3 +1,5 @@
+__author__ = "Oluwamayowa Esan"
+
 import json
 import os
 import re
