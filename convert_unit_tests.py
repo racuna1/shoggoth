@@ -23,7 +23,7 @@ def parseXML(file):
 
         for failure in testCase.findall('failure'):
             fail = {}
-            fail['message'] = failure.get('message')
+            fail['message'] = re.sub("\{newline\}", "\n", failure.get('message'))
             result['failCount'] = result.get('failCount') + 1
             failures.append(fail)
         
