@@ -72,6 +72,9 @@ def grade(config, gsr):
             for failure in tr['failures']:
                 messageString += failure['message']
             gsr.add_test_result(
-                tr['name'], 0, val, 'Failed ' + str(tr['failCount']) + ' test cases.')
+                tr['name'], 0, val, messageString)
         else:
             gsr.add_test_result(tr['name'], val, val, 'Passed all test cases.')
+
+    #gradescope is being weird about this, so we're gonna disable that rn
+    #gsr.set_max_score(config["total_score"])

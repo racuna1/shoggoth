@@ -7,7 +7,7 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-int main_stuff();
+int submission_main();
 
 
 #ifdef __cplusplus
