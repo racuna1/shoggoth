@@ -86,5 +86,3 @@ class GradescopeResult:
                               "max_score": 0.0,
                               "visibility": "visible",
                               "output": "Disallowed include files found. Allowed include files are {}".format(whitelist)}]}
-
-                              

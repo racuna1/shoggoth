@@ -21,7 +21,8 @@ CPPUTEST_HOME=/autograder/cpputest
 #include localDirs.mk
 
 #manually set warn flags so we don't end up with something idiotic like -Wall -Wextra -Werror (seriously how is that default???)
-CPPUTEST_WARNINGFLAGS = -Wall -Wextra -Wshadow -Wswitch-default -Wswitch-enum -Wconversion -Wno-long-long
+#CPPUTEST_WARNINGFLAGS = -Wall -Wextra -Wshadow -Wswitch-default -Wswitch-enum -Wconversion -Wno-long-long
+CPPUTEST_WARNINGFLAGS = -Wshadow -Wswitch-default -Wswitch-enum -Wconversion -Wno-long-long
 
 #generate coverage maps
 #CPPUTEST_USE_GCOV=Y

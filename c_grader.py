@@ -30,7 +30,7 @@ def grade(config, gsr):
                 exit()
 
             if required == config["main_file"]:
-                rename_main(required)
+                rename_main(filepath_required)
 
             shutil.copy(filepath_required,
                         config["project_location"] + "src/code/")
@@ -46,9 +46,16 @@ def grade(config, gsr):
     elif status == 2:
         gsr.add_note("Note", "Some tests may have failed.")
 
-    shutil.copy(config["project_location"] +
-                "tests/cpputest_tests.xml", "/autograder/source/test_results/")
 
+    #CJ: We check if ithe test results were generated, if they weren't then the program likely crashed.
+    try:
+        shutil.copy(config["project_location"] + "tests/cpputest_tests.xml", "/autograder/source/test_results/")
+    except IOError as e:
+        gsr.add_note("Error", "The Program did not execute successfully (likely a segmentation fault or other runtime error occurred).")
+        gsr.save(config["filepath_results"])
+        exit()
+
+    
     testResults = parseXML(
         "/autograder/source/test_results/cpputest_tests.xml")
 
