@@ -2,6 +2,7 @@ __author__ = "Charles Jeffries"
 
 import gradescope_result
 import xml.etree.ElementTree as ET
+import re
 
 def parseXML(file):
     tree = ET.parse(file)
