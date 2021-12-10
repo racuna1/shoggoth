@@ -1,0 +1,5 @@
+make --dry-run --always-make --keep-going --print-directory
+make: Entering directory '/home/charles/C_Projects/SER334/honors_contract/cpputest/test'
+make -C t
+make: Leaving directory '/home/charles/C_Projects/SER334/honors_contract/cpputest/test'
+ 
