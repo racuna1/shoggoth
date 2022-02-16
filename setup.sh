@@ -6,14 +6,14 @@ apt-get -y install openjdk-11-jdk python3-pip
 apt-get install --reinstall ca-certificates-java
 update-ca-certificates -f
 
-#RA: manually fetch maven 3.8.3 instead of using default 3.6.0 package
+#RA: manually fetch maven 3.8.4 instead of using default 3.6.0 package
 cd /autograder
-wget https://mirror.olnevhost.net/pub/apache/maven/maven-3/3.8.3/binaries/apache-maven-3.8.3-bin.tar.gz
-tar xzvf apache-maven-3.8.3-bin.tar.gz
+wget https://mirror.olnevhost.net/pub/apache/maven/maven-3/3.8.4/binaries/apache-maven-3.8.4-bin.tar.gz
+tar xzvf apache-maven-3.8.4-bin.tar.gz
 
 #RA: install jh61b manually
 cd /autograder/source
-export PATH="/autograder/apache-maven-3.8.3/bin:$PATH"
+export PATH="/autograder/apache-maven-3.8.4/bin:$PATH"
 mvn install:install-file -Dfile=lib/jh61b-1.0.jar
 
 # cache maven packages and plugins during Dock build
