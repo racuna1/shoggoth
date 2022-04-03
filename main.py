@@ -14,23 +14,64 @@ import analysis_java_perf
 import gradescope_result
 
 
-def extract_imports(filename):
-    with open(filename, "r") as file:
-        data = file.read()
-        cu = javalang.parse.parse(data)
-        packages = [(p.path, p.wildcard) for p in cu.imports]
-        return packages
+def extract_imports(filename, cu):
+    import_packages = [(p.path, p.wildcard) for p in cu.imports]
+
+    return import_packages
+
+
+# extract type references
+def extract_referenced_types(cu):
+    type_literals = set()
+
+    type_references = []
+    for path, node_class in cu.filter(javalang.tree.ReferenceType):
+        already_discovered = False
+
+        for known_reference in type_references:
+            other = known_reference
+            while other:
+                if node_class == other:
+                    already_discovered = True
+                other = other.sub_type
+
+        if not already_discovered:
+            type_references.extend([node_class])
+
+    for ref_type in type_references:
+        parts = []
+
+        while ref_type:
+            parts += [ref_type.name]
+            ref_type = ref_type.sub_type
+
+        literal = ".".join(parts)
+        type_literals.add(tuple([literal, False]))
+
+    return type_literals
 
 
 def find_disallowed_packages(filepaths, whitelist):
-    packages = set()
+    imported_packages = set()
+    referenced_types = set()
 
-    # find all packages in use
+    # find all packages in use or referenced
     for filename in filepaths:
         if os.path.isfile(filename):
-            packages.update(extract_imports(filename))
+            with open(filename, "r") as file:
+                data = file.read()
+                cu = javalang.parse.parse(data)
 
-    disallowed = [p for p in packages if p[0] not in whitelist or p[1]]
+                imported_packages.update(extract_imports(filename, cu))
+                referenced_types.update(extract_referenced_types(cu))
+
+    # whitelisting imports
+    all = imported_packages
+
+    referenced_types = set([x for x in referenced_types if "java." in x[0]])  # less its stdlib, skip it
+    all.update(referenced_types)
+
+    disallowed = [p for p in all if p[0] not in whitelist or p[1]]
 
     return disallowed
 
