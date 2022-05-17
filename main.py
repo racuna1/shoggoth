@@ -220,6 +220,7 @@ if __name__ == "__main__":
         # compilation succeeded, apply grading rules.
         gsr.load(filepath_initial_results)
         filepaths = [config["project_location"] + f for f in config["files_required"] + config["files_optional"]]
+        filepaths = [fn for fn in filepaths if os.path.isfile(fn)]
 
         # build javalang parse trees for all files
         parse_trees = dict()
