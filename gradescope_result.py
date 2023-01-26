@@ -1,3 +1,7 @@
+"""
+Shoggoth - A Gradescope compatible tool for performing automatic assessment of Java homework, using static and
+dynamic analysis.
+"""
 __author__ = "Ruben Acuna"
 
 import json
@@ -23,15 +27,18 @@ class GradescopeResult:
         with open(filepath, 'w') as outfile:
             json.dump(self.results, outfile)
 
-    def add_note(self, name,  output):
+    def add_case(self, name, score, max_score, output):
         new_entry = {'name': name,
-                     'number': '0',
-                     'score': 0.0,
-                     'max_score': 0.0,
+                     'number': '0',  # TODO: pick final number?
+                     'score': score,
+                     'max_score': max_score,
                      'visibility': 'visible',
                      'output': output}
 
         self.results["tests"].append(new_entry)
+
+    def add_note(self, name,  output):
+        self.add_case(name, 0.0, 0.0, output)
 
     def zero_all(self):
         for test in self.results["tests"]:

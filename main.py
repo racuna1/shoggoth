@@ -11,6 +11,7 @@ import javalang
 import json
 
 import analysis_java_perf
+import analysis_java_checkstyle
 import gradescope_result
 
 
@@ -216,6 +217,7 @@ if __name__ == "__main__":
     else:
         filepath_initial_results = "/autograder/results/results_wip.json"
         os.system("mvn -q exec:java > " + filepath_initial_results)
+        os.system("mvn checkstyle:checkstyle")  # results will be saved in target\
 
         # compilation succeeded, apply grading rules.
         gsr.load(filepath_initial_results)
@@ -244,5 +246,9 @@ if __name__ == "__main__":
 
         # 4) assert no class variables
         assert_no_class_variables(gsr, filepaths, parse_trees, config["assert_no_class_variables"])
+
+        # evaluate checkstyle report
+        if "checkstyle_graded_rules" in config:
+            analysis_java_checkstyle.evaluate(gsr, config["checkstyle_graded_rules"])
 
     gsr.save(config["filepath_results"])

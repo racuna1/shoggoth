@@ -18,5 +18,15 @@
     ],
     "assert_no_class_variables":[
         "CompletedMerging"
+    ],
+    "checkstyle_graded_rules":[
+        {
+            "name": "LocalVariableName",
+            "max_score": 1.0
+        },
+        {
+            "name": "MadeUpRuleName",
+            "max_score": 1.0
+        }
     ]
 }
