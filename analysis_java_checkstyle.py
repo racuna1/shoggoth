@@ -29,7 +29,7 @@ def evaluate(gsr, grading_rules):
 
         for error in file:
             line = error.attrib["line"]
-            column = error.attrib["column"]
+            #column = error.attrib["column"]
             severity = error.attrib["severity"]
             message = error.attrib["message"]
             source = error.attrib["source"]
