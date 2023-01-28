@@ -40,7 +40,7 @@ def evaluate(gsr, grading_rules):
             rule = source.split(".")[-1]
 
             # LocalVariableNameCheck -> LocalVariableNameCheck
-            if category == "naming":
+            if category == "naming" or category == "blocks" or category == "sizes":
                 rule = rule[:-5]  # remove Check suffix
 
             # formatted like html
@@ -71,19 +71,22 @@ def evaluate(gsr, grading_rules):
             gsr.add_case(f"Checkstyle Rule: {gr['name']}", gr["max_score"], gr["max_score"], "")
 
     # add a note about any uncaught errors
-    uncaught_message = f"Checkstyle has identified {len(uncaught_errors)} additional errors. These errors are not worth points and are only informative:"
+    if len(uncaught_errors) > 0:
+        uncaught_message = f"Checkstyle has identified {len(uncaught_errors)} additional errors. These errors are not worth points and are only informative:"
 
-    for src_file, severity, category, rule, message, line in uncaught_errors:
-        message = f"\nFile: {src_file}, Severity: {severity}, Category: {category}, Rule: {rule}, Message: {message}, Line: {line}"
-        uncaught_message += message
-    gsr.add_note("Checkstyle Overall", uncaught_message)
+        for src_file, severity, category, rule, message, line in uncaught_errors:
+            message = f"\nFile: {src_file}, Severity: {severity}, Category: {category}, Rule: {rule}, Message: {message}, Line: {line}"
+            uncaught_message += message
+        gsr.add_note("Checkstyle Overall", uncaught_message)
 
     #print(uncaught_message)
-    #print(gsr.results)
+    print(gsr.results)
 
 
 if __name__ == "__main__":
-    rules = [{"name": "LocalVariableName", "max_score": 1.0}, {"name": "MadeUpRuleName", "max_score": 1.0}]
+    rules = [{"name": "LineLength", "max_score": 1.1}, {"name": "EmptyBlock", "max_score": .1}, {"name": "NeedBraces", "max_score": .1}, {"name": "OneStatementPerLine", "max_score": .1},
+             {"name": "MultipleVariableDeclarations", "max_score": .1}, {"name": "ArrayTypeStyle", "max_score": .1}, {"name": "MissingSwitchDefault", "max_score": .1}, {"name": "MemberName", "max_score": .1}
+             , {"name": "ParameterName", "max_score": .1}, {"name": "MethodName", "max_score": .1}]
 
     result = gradescope_result.GradescopeResult()
     #may need info from config file as well
