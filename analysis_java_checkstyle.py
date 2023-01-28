@@ -47,8 +47,9 @@ def evaluate(gsr, grading_rules):
             # print(severity, category, rule, message, line)
 
             # three options: start new, continue existing, or put into bucket.
+            # can also save "Severity: {severity}, Category: {category}, "
             if rule in rule_violations:
-                rule_violations[rule] += f"\nFile: {src_file}, Severity: {severity}, Category: {category}, Rule: {rule}, Message: {message}, Line: {line}"
+                rule_violations[rule] += f"\nFile: {src_file}, Rule: {rule}, Message: {message}, Line: {line}"
             else:
                 grading_rule = None
                 for gr in grading_rules:
@@ -57,30 +58,31 @@ def evaluate(gsr, grading_rules):
                         break
 
                 if grading_rule:
-                    rule_violations[rule] = f"File: {src_file}, Severity: {severity}, Category: {category}, Rule: {rule}, Message: {message}, Line: {line}"
+                    rule_violations[rule] = f"File: {src_file}, Rule: {rule}, Message: {message}, Line: {line}"
                 else:
                     uncaught_errors.append((src_file, severity, category, rule, message, line))
 
     # add a note for each rule violation
-    for gr in grading_rules:
+    for i, gr in enumerate(grading_rules):
+        number = "0."+str(i+1)
         if gr["name"] in rule_violations:
             # lost credit
-            gsr.add_case(f"Checkstyle Rule: {gr['name']}", 0, gr["max_score"], rule_violations[gr["name"]])
+            gsr.add_case(f"Checkstyle Rule: {gr['name']}", number, 0, gr["max_score"], rule_violations[gr["name"]])
         else:
             # earned credit
-            gsr.add_case(f"Checkstyle Rule: {gr['name']}", gr["max_score"], gr["max_score"], "")
+            gsr.add_case(f"Checkstyle Rule: {gr['name']}", number, gr["max_score"], gr["max_score"], "")
 
     # add a note about any uncaught errors
     if len(uncaught_errors) > 0:
         uncaught_message = f"Checkstyle has identified {len(uncaught_errors)} additional errors. These errors are not worth points and are only informative:"
 
         for src_file, severity, category, rule, message, line in uncaught_errors:
-            message = f"\nFile: {src_file}, Severity: {severity}, Category: {category}, Rule: {rule}, Message: {message}, Line: {line}"
+            message = f"\nFile: {src_file}, Rule: {rule}, Message: {message}, Line: {line}"
             uncaught_message += message
         gsr.add_note("Checkstyle Overall", uncaught_message)
 
     #print(uncaught_message)
-    print(gsr.results)
+    #print(gsr.results)
 
 
 if __name__ == "__main__":
