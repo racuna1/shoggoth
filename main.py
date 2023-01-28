@@ -199,7 +199,7 @@ if __name__ == "__main__":
             gsr.save(config["filepath_results"])
             exit()
         else:
-            shutil.copy(filepath_required, config["project_location"])
+            shutil.copy(filepath_required, config["project_location"] + required)
 
     print("shoggoth: all required files exist.")
 
@@ -207,7 +207,7 @@ if __name__ == "__main__":
     for optional in config["files_optional"]:
         filepath_optional = config["submission_location"] + optional
         if os.path.isfile(filepath_optional):
-            shutil.copy(filepath_optional, config["project_location"])
+            shutil.copy(filepath_optional, config["project_location"] + required)
 
     ret = os.system("mvn -q compile")
 
