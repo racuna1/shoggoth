@@ -79,7 +79,7 @@ def evaluate(gsr, grading_rules):
         for src_file, severity, category, rule, message, line in uncaught_errors:
             message = f"\nFile: {src_file}, Rule: {rule}, Message: {message}, Line: {line}"
             uncaught_message += message
-        gsr.add_note("Checkstyle Overall", uncaught_message)
+        gsr.add_note("Checkstyle Other", uncaught_message)
 
     #print(uncaught_message)
     #print(gsr.results)
