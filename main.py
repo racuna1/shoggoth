@@ -232,11 +232,15 @@ if __name__ == "__main__":
                 cu = javalang.parse.parse(data)
                 parse_trees[filepath] = cu
 
+        # evaluate checkstyle report
+        if "checkstyle_graded_rules" in config:
+            analysis_java_checkstyle.evaluate(gsr, config["checkstyle_graded_rules"])
+
         # 1) check for disallowed packages and zero scores if any are found.
         disallowed_packages = find_disallowed_packages(filepaths, config["package_whitelist"])
         if disallowed_packages:
             gsr.zero_all()
-            gsr.add_note("Disallowed packages used.", str([p[0] for p in disallowed_packages]))
+            gsr.add_note("Disallowed packages used.", str([p[0] for p in disallowed_packages]), True)
 
         # 2) assert O(1) requirement
         assert_perf_constant_rules(gsr, filepaths, parse_trees, config["assert_perf_constant"])
@@ -246,9 +250,5 @@ if __name__ == "__main__":
 
         # 4) assert no class variables
         assert_no_class_variables(gsr, filepaths, parse_trees, config["assert_no_class_variables"])
-
-        # evaluate checkstyle report
-        if "checkstyle_graded_rules" in config:
-            analysis_java_checkstyle.evaluate(gsr, config["checkstyle_graded_rules"])
 
     gsr.save(config["filepath_results"])

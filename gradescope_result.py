@@ -27,7 +27,7 @@ class GradescopeResult:
         with open(filepath, 'w') as outfile:
             json.dump(self.results, outfile)
 
-    def add_case(self, name, number, score, max_score, output):
+    def add_case(self, name, number, score, max_score, output, force_failed=False):
         new_entry = {'name': name,
                      'number': number,
                      'score': score,
@@ -35,10 +35,13 @@ class GradescopeResult:
                      'visibility': 'visible',
                      'output': output}
 
+        if force_failed:
+            new_entry["status"] = "failed"
+
         self.results["tests"].append(new_entry)
 
-    def add_note(self, name, output):
-        self.add_case(name, "0", 0.0, 0.0, output)
+    def add_note(self, name, output, force_failed=False):
+        self.add_case(name, "0", 0.0, 0.0, output, force_failed)
 
     def zero_all(self):
         for test in self.results["tests"]:
