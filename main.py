@@ -207,7 +207,7 @@ if __name__ == "__main__":
     for optional in config["files_optional"]:
         filepath_optional = config["submission_location"] + optional
         if os.path.isfile(filepath_optional):
-            shutil.copy(filepath_optional, config["project_location"] + required)
+            shutil.copy(filepath_optional, config["project_location"] + optional)
 
     ret = os.system("mvn -q compile")
 
