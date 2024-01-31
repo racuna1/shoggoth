@@ -209,6 +209,9 @@ if __name__ == "__main__":
         if os.path.isfile(filepath_optional):
             shutil.copy(filepath_optional, config["project_location"] + optional)
 
+    # load checkstyle setting
+    enabled_checkstyle = "checkstyle_graded_rules" in config
+
     ret = os.system("mvn -q compile")
 
     # check if compilation failed
@@ -217,7 +220,9 @@ if __name__ == "__main__":
     else:
         filepath_initial_results = "/autograder/results/results_wip.json"
         os.system("mvn -q exec:java > " + filepath_initial_results)
-        os.system("mvn checkstyle:checkstyle")  # results will be saved in target\
+
+        if enabled_checkstyle:
+            os.system("mvn checkstyle:checkstyle")  # results will be saved in target\
 
         # compilation succeeded, apply grading rules.
         gsr.load(filepath_initial_results)
@@ -233,7 +238,7 @@ if __name__ == "__main__":
                 parse_trees[filepath] = cu
 
         # evaluate checkstyle report
-        if "checkstyle_graded_rules" in config:
+        if enabled_checkstyle:
             analysis_java_checkstyle.evaluate(gsr, config["checkstyle_graded_rules"])
 
         # 1) check for disallowed packages and zero scores if any are found.

@@ -16,7 +16,7 @@ cd /autograder/source
 export PATH="/autograder/apache-maven-3.8.8/bin:$PATH"
 mvn install:install-file -Dfile=lib/jh61b-1.0.jar
 
-# cache maven packages and plugins during Dock build
+# cache maven packages and plugins during Docker build
 mvn dependency:go-offline
 
 # install packages for shoggoth
